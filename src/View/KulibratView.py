@@ -6,7 +6,7 @@ from src.Controller.GameController import GameController
 @staticmethod
 def launch():
     width = 1000
-    height = 800
+    height = 900
 
     gameController = GameController()
     window = Tk()
@@ -26,7 +26,10 @@ def callback(e):
     width = 1000
     height = 800
     spacing = 20
+    if e.x > 20 & e.x < 600 & e.y > 20 & e.y < 820:
+        print("within")
     print("x=%d, y=%d", e.x, e.y)
+
 
 def draw_grid(canvas, height, width):
     # outer line
@@ -35,37 +38,37 @@ def draw_grid(canvas, height, width):
     canvas.create_line(
         spacing, spacing,
         spacing, height - spacing,
-         width - spacing, height - spacing,
-         width - spacing, spacing,
+         width + spacing, height - spacing,
+         width + spacing, spacing,
         spacing, spacing,
         width=draw_width)
 
     canvas.create_line(
-        width / 3, spacing,
-        width / 3, height - spacing,
+        (width / 3) + spacing, spacing,
+        (width / 3) + spacing, height - spacing,
         width=draw_width
     )
 
     canvas.create_line(
-        (width / 3) * 2, spacing,
-        (width / 3) * 2, height - spacing,
+        ((width / 3) * 2) + spacing, spacing,
+        ((width / 3) * 2) + spacing, height - spacing,
         width=draw_width
     )
 
     canvas.create_line(
         spacing, height/4,
-        width-spacing, height/4,
+        width + spacing, height/4,
         width=draw_width
     )
 
     canvas.create_line(
         spacing, 3*height/4,
-        width-spacing, 3*height/4,
+        width + spacing, 3*height/4,
         width=draw_width
     )
 
     canvas.create_line(
         spacing, 2 * height / 4,
-         width - spacing, 2 * height / 4,
+         width + spacing, 2 * height / 4,
         width=draw_width
     )

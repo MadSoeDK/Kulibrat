@@ -13,12 +13,6 @@ class GameController(object):
         # 0 = Black Player, 1 = Red Player
         self.currentPlayer = self.players[0]
 
-    def get_owner(self, num):
-        return self.board.get_square(num).get_owner()
-
-    def on_square_click(self, square_index):
-        return
-
     def get_input(self):
         square = input('Select square to move from ')
         to_move = input('Select square to move to ')
@@ -26,7 +20,7 @@ class GameController(object):
         return
 
     # Check if the move is valid and if so moves the piece
-    def is_move_legal(self):
+    def _is_move_legal(self):
         return
 
     def move(self):
@@ -43,4 +37,10 @@ class GameController(object):
 
     def jump(self):
         return
+
+
+#Method called by view
+    def click(self, square):
+        self
+
 
