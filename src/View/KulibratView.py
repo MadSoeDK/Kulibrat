@@ -19,8 +19,25 @@ def launch():
 
     window.bind('<Button-1>', callback)
 
-    window.mainloop()
+    spawn_button1 = Button(window,
+                          bd=5,
+                          text="Spawn button 1",
+                          command=exit)
+    spawn_button1.place(x=640, y=20)
 
+    spawn_button2 = Button(window,
+                          bd=5,
+                          text="Spawn button 2",
+                          command=exit)
+    spawn_button2.place(x=640, y=710)
+
+    exit_button1 = Button (window,
+                           bd=5,
+                           text="Close Game",
+                           command=exit)
+    exit_button1.place(x=900,y=20)
+
+    window.mainloop()
 
 def callback(e):
     width = 1000
