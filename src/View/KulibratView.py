@@ -26,8 +26,31 @@ def callback(e):
     width = 1000
     height = 800
     spacing = 20
-    if e.x > 20 & e.x < 600 & e.y > 20 & e.y < 820:
-        print("within")
+    if 20 < e.x < 220 and 20 < e.y < 200:
+        print("Grid index: 1")
+    elif 220 < e.x < 420 and 20 < e.y < 200:
+        print("Grid index: 2")
+    elif 420 < e.x < 620 and 20 < e.y < 200:
+        print("Grid index: 3")
+    elif 20 < e.x < 220 and 200 < e.y < 400:
+        print("Grid index: 4")
+    elif 220 < e.x < 420 and 200 < e.y < 400:
+        print("Grid index: 5")
+    elif 420 < e.x < 620 and 200 < e.y < 400:
+        print("Grid index: 6")
+    elif 20 < e.x < 220 and 400 < e.y < 600:
+        print("Grid index: 7")
+    elif 220 < e.x < 420 and 400 < e.y < 600:
+        print("Grid index: 8")
+    elif 420 < e.x < 620 and 400 < e.y < 600:
+        print("Grid index: 9")
+    elif 20 < e.x < 220 and 600 < e.y < 800:
+        print("Grid index: 10")
+    elif 220 < e.x < 420 and 600 < e.y < 800:
+        print("Grid index: 11")
+    elif 420 < e.x < 620 and 600 < e.y < 800:
+        print("Grid index: 12")
+
     print("x=%d, y=%d", e.x, e.y)
 
 
