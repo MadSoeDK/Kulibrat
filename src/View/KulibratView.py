@@ -25,6 +25,7 @@ def launch():
 def callback(e):
     width = 1000
     height = 800
+    spacing = 20
     print("x=%d, y=%d", e.x, e.y)
 
 def draw_grid(canvas, height, width):
