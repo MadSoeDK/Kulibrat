@@ -2,42 +2,44 @@ from tkinter import *
 
 from src.Controller.GameController import GameController
 
+gameController = GameController()
+
 
 @staticmethod
 def launch():
     width = 1000
-    height = 900
+    height = 840
 
-    gameController = GameController()
     window = Tk()
     window.minsize(width, height)
     window.resizable(False, False)
-    canvas = Canvas(window, width= width, height= height)
+    canvas = Canvas(window, width=width, height=height)
     canvas.pack()
 
-    draw_grid(canvas, 800, 600)
+    draw_grid(canvas, 840, 640)
 
     window.bind('<Button-1>', callback)
 
     spawn_button1 = Button(window,
-                          bd=5,
-                          text="Spawn button 1",
-                          command=exit)
+                           bd=5,
+                           text="Spawn button 1",
+                           command=exit)
     spawn_button1.place(x=640, y=20)
 
     spawn_button2 = Button(window,
-                          bd=5,
-                          text="Spawn button 2",
-                          command=exit)
+                           bd=5,
+                           text="Spawn button 2",
+                           command=exit)
     spawn_button2.place(x=640, y=710)
 
-    exit_button1 = Button (window,
-                           bd=5,
-                           text="Close Game",
-                           command=exit)
-    exit_button1.place(x=900,y=20)
+    exit_button1 = Button(window,
+                          bd=5,
+                          text="Close Game",
+                          command=exit)
+    exit_button1.place(x=900, y=20)
 
     window.mainloop()
+
 
 def callback(e):
     width = 1000
@@ -68,47 +70,36 @@ def callback(e):
     elif 420 < e.x < 620 and 600 < e.y < 800:
         print("Grid index: 12")
 
+    calc = int((e.x - 21) / 200) + 1 + int((e.y - 21) / 200) * 3
+    print(calc)
+    if 0 < calc < 13:
+        gameController.click(calc)
+    # need to add calc for the spawn/goal buttons
+
     print("x=%d, y=%d", e.x, e.y)
 
 
 def draw_grid(canvas, height, width):
-    # outer line
     spacing = 20
     draw_width = 10
+
     canvas.create_line(
         spacing, spacing,
         spacing, height - spacing,
-         width + spacing, height - spacing,
-         width + spacing, spacing,
+        width - spacing, height - spacing,
+        width - spacing, spacing,
         spacing, spacing,
         width=draw_width)
 
-    canvas.create_line(
-        (width / 3) + spacing, spacing,
-        (width / 3) + spacing, height - spacing,
-        width=draw_width
-    )
-
-    canvas.create_line(
-        ((width / 3) * 2) + spacing, spacing,
-        ((width / 3) * 2) + spacing, height - spacing,
-        width=draw_width
-    )
-
-    canvas.create_line(
-        spacing, height/4,
-        width + spacing, height/4,
-        width=draw_width
-    )
-
-    canvas.create_line(
-        spacing, 3*height/4,
-        width + spacing, 3*height/4,
-        width=draw_width
-    )
-
-    canvas.create_line(
-        spacing, 2 * height / 4,
-         width + spacing, 2 * height / 4,
-        width=draw_width
-    )
+    for i in range(2):
+        canvas.create_line(
+            ((width - spacing * 2) / 3) * (i + 1) + spacing, spacing,
+            ((width - spacing * 2) / 3) * (i + 1) + spacing, height - spacing,
+            width=draw_width
+        )
+    for i in range(3):
+        canvas.create_line(
+            spacing, ((height - spacing * 2) / 4) * (i + 1) + spacing,
+                     width - spacing, ((height - spacing * 2) / 4) * (i + 1) + spacing,
+            width=draw_width
+        )
