@@ -72,8 +72,9 @@ def callback(e):
 
     calc = int((e.x - 21) / 200) + 1 + int((e.y - 21) / 200) * 3
     print(calc)
-    if 0 < calc < 13:
+    if 0 < calc < 13 and 20 <= e.x <= 620 and 20 <= e.y <= 820:
         gameController.click(calc)
+        print("within")
     # need to add calc for the spawn/goal buttons
 
     print("x=%d, y=%d", e.x, e.y)
