@@ -43,4 +43,9 @@ class GameController(object):
     def click(self, square):
         self
 
+    def squareState(self, index):
+        if index > 13:
+            return None
+        return self.board.squares[index]
+
 
