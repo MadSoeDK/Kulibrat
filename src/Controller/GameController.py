@@ -1,14 +1,23 @@
 from src.Model.BoardModel import BoardModel
+from src.Model.Player import Player
 
 
 class GameController(object):
-    currentPlayer = 0
 
     def __init__(self):
         self.board = BoardModel()
+        self.players = [Player(), Player()]
+        self.toSquare = None
+        self.fromSquare = None
+
+        # 0 = Black Player, 1 = Red Player
+        self.currentPlayer = self.players[0]
 
     def get_owner(self, num):
         return self.board.get_square(num).get_owner()
+
+    def on_square_click(self, square_index):
+        return
 
     def get_input(self):
         square = input('Select square to move from ')
@@ -17,6 +26,9 @@ class GameController(object):
         return
 
     # Check if the move is valid and if so moves the piece
+    def is_move_legal(self):
+        return
+
     def move(self):
         return
 
