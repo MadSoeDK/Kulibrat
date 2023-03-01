@@ -1,4 +1,5 @@
 from tkinter import *
+import math
 
 from src.Controller.GameController import GameController
 
@@ -20,18 +21,6 @@ def launch():
 
     window.bind('<Button-1>', callback)
 
-    spawn_button1 = Button(window,
-                           bd=5,
-                           text="Spawn button 1",
-                           command=exit)
-    spawn_button1.place(x=640, y=20)
-
-    spawn_button2 = Button(window,
-                           bd=5,
-                           text="Spawn button 2",
-                           command=exit)
-    spawn_button2.place(x=640, y=710)
-
     exit_button1 = Button(window,
                           bd=5,
                           text="Close Game",
@@ -42,9 +31,7 @@ def launch():
 
 
 def callback(e):
-    width = 1000
-    height = 800
-    spacing = 20
+    """
     if 20 < e.x < 220 and 20 < e.y < 200:
         print("Grid index: 1")
     elif 220 < e.x < 420 and 20 < e.y < 200:
@@ -69,6 +56,7 @@ def callback(e):
         print("Grid index: 11")
     elif 420 < e.x < 620 and 600 < e.y < 800:
         print("Grid index: 12")
+    """
 
     calc = int((e.x - 21) / 200) + 1 + int((e.y - 21) / 200) * 3
     print(calc)
@@ -76,6 +64,12 @@ def callback(e):
         gameController.click(calc)
         print("within")
     # need to add calc for the spawn/goal buttons
+    elif math.sqrt(((e.x - 740)**2)+((e.y - 120)**2)) < 100:
+        gameController.click(13)
+        print("13")
+    elif math.sqrt(((e.x - 740)**2)+((e.y - 720)**2)) < 100:
+        gameController.click(14)
+        print("14")
 
     print("x=%d, y=%d", e.x, e.y)
 
@@ -104,3 +98,12 @@ def draw_grid(canvas, height, width):
                      width - spacing, ((height - spacing * 2) / 4) * (i + 1) + spacing,
             width=draw_width
         )
+
+    #Drawing the circles
+    canvas.create_oval(640,620,840,820, width=draw_width)
+    canvas.create_text(740, 720, font='Pursia 20', text="Spawn")
+
+    canvas.create_oval(640, 20, 840, 220, width=draw_width)
+    canvas.create_text(740, 120, font='Pursia 20', text="Goal")
+
+    canvas.pack()
