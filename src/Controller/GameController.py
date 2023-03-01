@@ -21,7 +21,7 @@ class GameController(object):
 
     # Check if the move is valid and if so moves the piece
     def _is_move_legal(self):
-        self.toSquare = self.currentPlayer
+        self.toSquare.owner = self.currentPlayer
 
     def move(self):
         return
@@ -53,3 +53,4 @@ class GameController(object):
         self._is_move_legal()
         self.fromSquare = None
         self.toSquare = None
+        self.currentPlayer = self.players[(self.players.index(self.currentPlayer)+1) %2]
