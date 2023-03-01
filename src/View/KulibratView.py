@@ -103,18 +103,20 @@ def draw_grid():
     canvas.create_text(740, 120, font='Pursia 20', text="Goal")
 
     for i in range(12):
-        if gameController.board.squares[i] is gameController.fromSquare:
-            canvas.create_rectangle(
-                20,20,
-                220,220,
-                fill="yellow"
-            )
         if gameController.board.squares[i].owner is not None:
-            canvas.create_oval(
+            canvas.tag_raise(canvas.create_oval(
                 40 + 200 * (i % 3), 40 + 200 * int(i / 3),
                 (0 +200*((i % 3)+1)), (0+200*(int(i/3)+1)),
-                fill=gameController.board.squares[i].owner.color)
+                fill=gameController.board.squares[i].owner.color
+            ))
 
+    if gameController.fromSquare is not None:
+        square_index = gameController.board.squares.index(gameController.fromSquare)
+        canvas.tag_lower(canvas.create_rectangle(
+            20 + (square_index % 3) * 200, 20 + int(square_index / 3) * 200,
+            220 + (square_index % 3) * 200, 220 + int(square_index / 3) * 200,
+            fill="yellow"
+        ))
 
     canvas.pack()
     canvas.update()
