@@ -4,20 +4,26 @@ import math
 from src.Controller.GameController import GameController
 
 gameController = GameController()
+window: Tk
+canvas: Canvas
 
 
 @staticmethod
 def launch():
+    global window
+    global canvas
+
     width = 1000
     height = 840
 
     window = Tk()
     window.minsize(width, height)
     window.resizable(False, False)
+
     canvas = Canvas(window, width=width, height=height)
     canvas.pack()
 
-    draw_grid(canvas, 840, 640)
+    draw_grid(840, 640)
 
     window.bind('<Button-1>', callback)
 
@@ -27,6 +33,15 @@ def launch():
                           command=exit)
     exit_button1.place(x=900, y=20)
 
+    for i in range(12):
+        if gameController.board.squares[i].owner is not None:
+            canvas.create_rectangle(
+                20 + 200 * (i % 3), 20 + 200 * int(i / 3),
+                (20+200*((i % 3)+1)), (20+200*(int(i/3)+1)),
+                fill=gameController.board.squares[i].owner)
+
+    #if gameController.board.squares[0].owner is not Non
+    canvas.pack()
     window.mainloop()
 
 
@@ -64,27 +79,33 @@ def callback(e):
         gameController.click(calc)
         print("within")
     # need to add calc for the spawn/goal buttons
-    elif math.sqrt(((e.x - 740)**2)+((e.y - 120)**2)) < 100:
+    elif math.sqrt(((e.x - 740) ** 2) + ((e.y - 120) ** 2)) < 100:
         gameController.click(13)
         print("13")
-    elif math.sqrt(((e.x - 740)**2)+((e.y - 720)**2)) < 100:
+    elif math.sqrt(((e.x - 740) ** 2) + ((e.y - 720) ** 2)) < 100:
         gameController.click(14)
         print("14")
 
     print("x=%d, y=%d", e.x, e.y)
 
+    if gameController.board.squares[0] is gameController.board.squares[1]:
+        print("true")
+    #launch()
 
-def draw_grid(canvas, height, width):
+
+def draw_grid(height, width):
+    global canvas
     spacing = 20
     draw_width = 10
 
     canvas.create_line(
         spacing, spacing,
         spacing, height - spacing,
-        width - spacing, height - spacing,
-        width - spacing, spacing,
+                 width - spacing, height - spacing,
+                 width - spacing, spacing,
         spacing, spacing,
         width=draw_width)
+
 
     for i in range(2):
         canvas.create_line(
@@ -99,8 +120,8 @@ def draw_grid(canvas, height, width):
             width=draw_width
         )
 
-    #Drawing the circles
-    canvas.create_oval(640,620,840,820, width=draw_width)
+    # Drawing the circles
+    canvas.create_oval(640, 620, 840, 820, width=draw_width)
     canvas.create_text(740, 720, font='Pursia 20', text="Spawn")
 
     canvas.create_oval(640, 20, 840, 220, width=draw_width)

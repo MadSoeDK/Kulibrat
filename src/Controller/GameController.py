@@ -6,7 +6,7 @@ class GameController(object):
 
     def __init__(self):
         self.board = BoardModel()
-        self.players = [Player(), Player()]
+        self.players = [Player("black"), Player("red")]
         self.toSquare = None
         self.fromSquare = None
 
@@ -21,7 +21,7 @@ class GameController(object):
 
     # Check if the move is valid and if so moves the piece
     def _is_move_legal(self):
-        return
+        self.toSquare = self.currentPlayer
 
     def move(self):
         return
@@ -38,9 +38,18 @@ class GameController(object):
     def jump(self):
         return
 
+    # Method called by view
+    def click(self, square_index):
+        if square_index == 13 or square_index == 14:
+            return
+        if self.fromSquare is None:
+            self.fromSquare = self.board.squares[square_index-1]
+            return
+        if self.fromSquare is self.board.squares[square_index-1]:
+            self.fromSquare = None
+            return
+        self.toSquare = self.board.squares[square_index-1]
 
-#Method called by view
-    def click(self, square):
-        self
-
-
+        self._is_move_legal()
+        self.fromSquare = None
+        self.toSquare = None
