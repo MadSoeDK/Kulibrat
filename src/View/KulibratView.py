@@ -77,10 +77,11 @@ def draw_grid():
     canvas.create_line(
         spacing, spacing,
         spacing, height - spacing,
-                 width - spacing, height - spacing,
-                 width - spacing, spacing,
+        width - spacing, height - spacing,
+        width - spacing, spacing,
         spacing, spacing,
-        width=draw_width)
+        width=draw_width
+    )
 
     for i in range(2):
         canvas.create_line(
