@@ -21,7 +21,7 @@ def launch():
     window.minsize(width, height)
     window.resizable(False, False)
 
-    canvas = Canvas(window, width= width, height= height)
+    canvas = Canvas(window, width=width, height=height)
     canvas.pack()
 
     draw_grid()
@@ -39,22 +39,13 @@ def launch():
 
 def callback(e):
     calc = int((e.x - 21) / 200) + 1 + int((e.y - 21) / 200) * 3
-    print(calc)
     if 0 < calc < 13 and 20 <= e.x <= 620 and 20 <= e.y <= 820:
         gameController.click(calc)
-        print("within")
     # need to add calc for the spawn/goal buttons
     elif math.sqrt(((e.x - 740) ** 2) + ((e.y - 120) ** 2)) < 100:
         gameController.click(13)
-        print("13")
     elif math.sqrt(((e.x - 740) ** 2) + ((e.y - 720) ** 2)) < 100:
         gameController.click(14)
-        print("14")
-
-    print("x=%d, y=%d", e.x, e.y)
-
-    if gameController.board.squares[0] is gameController.board.squares[1]:
-        print("true")
     global canvas
     canvas.delete('all')
     draw_grid()
@@ -77,8 +68,8 @@ def draw_grid():
     canvas.create_line(
         spacing, spacing,
         spacing, height - spacing,
-        width - spacing, height - spacing,
-        width - spacing, spacing,
+                 width - spacing, height - spacing,
+                 width - spacing, spacing,
         spacing, spacing,
         width=draw_width
     )
@@ -92,7 +83,7 @@ def draw_grid():
     for i in range(3):
         canvas.create_line(
             spacing, ((height - spacing * 2) / 4) * (i + 1) + spacing,
-            width - spacing, ((height - spacing * 2) / 4) * (i + 1) + spacing,
+                     width - spacing, ((height - spacing * 2) / 4) * (i + 1) + spacing,
             width=draw_width
         )
 
@@ -107,17 +98,28 @@ def draw_grid():
         if gameController.board.squares[i].owner is not None:
             canvas.tag_raise(canvas.create_oval(
                 40 + 200 * (i % 3), 40 + 200 * int(i / 3),
-                (0 +200*((i % 3)+1)), (0+200*(int(i/3)+1)),
+                (0 + 200 * ((i % 3) + 1)), (0 + 200 * (int(i / 3) + 1)),
                 fill=gameController.board.squares[i].owner.color
             ))
 
     if gameController.fromSquare is not None:
-        square_index = gameController.board.squares.index(gameController.fromSquare)
-        canvas.tag_lower(canvas.create_rectangle(
-            20 + (square_index % 3) * 200, 20 + int(square_index / 3) * 200,
-            220 + (square_index % 3) * 200, 220 + int(square_index / 3) * 200,
-            fill="yellow"
-        ))
+        if gameController.board.squares.index(gameController.fromSquare) < 12:
+            square_index = gameController.board.squares.index(gameController.fromSquare)
+            canvas.tag_lower(canvas.create_rectangle(
+                20 + (square_index % 3) * 200, 20 + int(square_index / 3) * 200,
+                220 + (square_index % 3) * 200, 220 + int(square_index / 3) * 200,
+                fill="yellow"
+            ))
+        elif gameController.board.squares.index(gameController.fromSquare) == 13:
+            canvas.tag_lower(canvas.create_oval(
+                640, 620, 840, 820, fill="yellow"
+            ))
+        else:
+            canvas.tag_lower(canvas.create_oval(
+                640, 20, 840, 220, fill="yellow"
+            ))
+
+    canvas.create_text(800, 400, font='Pursia 20', text="current player: " + gameController.currentPlayer.color)
 
     canvas.pack()
     canvas.update()
