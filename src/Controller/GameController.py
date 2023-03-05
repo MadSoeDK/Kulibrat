@@ -15,8 +15,8 @@ class GameController(object):
         self.currentPlayer = self.players[0]
 
     # Check if the move is valid and if so moves the piece
-    def _is_move_legal(self):
-        # Spawn new piece control
+    def _is_move_legal(self) -> bool:
+        # Spawn new piece control. Check that the correct button for the currentPlayer has been pressed.
         if ((self.currentPlayer is self.players[0]) and (self.board.squares.index(self.fromSquare) == 13)) or (
                 self.currentPlayer is self.players[1] and self.board.squares.index(self.fromSquare) == 12):
             return self.insert_piece()
