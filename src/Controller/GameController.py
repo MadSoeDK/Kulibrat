@@ -21,9 +21,15 @@ class GameController(object):
                 self.currentPlayer is self.players[1] and self.board.squares.index(self.fromSquare) == 12):
             return self.insert_piece()
 
-        # Checks if player didn't select their own piece
+        # Check if player didn't select their own piece
         if self.fromSquare.owner is not self.currentPlayer:
             return False
+
+        # Home run! currentPlayer have gotten a piece home and gets a point.
+        # Check if pieces are at the last row and the correct button is pressed
+        if ((self.currentPlayer is self.players[0]) and (self.board.squares.index(self.toSquare) == 12)) or (
+                self.currentPlayer is self.players[1] and self.board.squares.index(self.toSquare) == 13):
+            return self.home_run()
 
         squares = self.board.squares
         fromColumn = squares.index(self.fromSquare) % 3
@@ -46,6 +52,17 @@ class GameController(object):
             return
 
         # Default return for now (only because not all cases are accounted for yet
+        return False
+
+    def home_run(self):
+        # Black has to be at the top row, or white at the bottom row
+        if (self.currentPlayer is self.players[0] and 0 <= self.board.squares.index(self.fromSquare) <= 2) or (
+                self.currentPlayer is self.players[1] and 9 <= self.board.squares.index(self.fromSquare) <= 11):
+            self.fromSquare.owner = None
+            self.currentPlayer.points += 1
+            return True
+
+        # Other cases not allowed
         return False
 
     def move(self):
@@ -82,9 +99,6 @@ class GameController(object):
         # All other cases is not allowed for inserting a piece
         return False
 
-    def diagonal_move(self):
-        return
-
     def attack(self):
         self.fromSquare.owner = None
         self.toSquare.owner = self.currentPlayer
@@ -112,4 +126,5 @@ class GameController(object):
             self.fromSquare = None
             self.toSquare = None
             return
+        print(self.currentPlayer.color, " has ", self.currentPlayer.points, " points")
         self.nextPlayer()
