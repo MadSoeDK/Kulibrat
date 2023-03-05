@@ -19,21 +19,7 @@ class GameController(object):
         # Spawn new piece control
         if ((self.currentPlayer is self.players[0]) and (self.board.squares.index(self.fromSquare) == 13)) or (
                 self.currentPlayer is self.players[1] and self.board.squares.index(self.fromSquare) == 12):
-            count = 0
-            for i in range(12):
-                if self.board.squares[i].owner is self.currentPlayer:
-                    count += 1
-            if count >= 4:
-                return False
-            if self.toSquare.owner is not None:
-                return False
-            if self.currentPlayer is self.players[0] and 9 <= self.board.squares.index(self.toSquare) <= 11:
-                self.insert_piece()
-                return True
-            elif self.currentPlayer is self.players[1] and 0 <= self.board.squares.index(self.toSquare) <= 2:
-                self.insert_piece()
-                return True
-            return False
+            return self.insert_piece()
 
         # Checks if player didn't select their own piece
         if self.fromSquare.owner is not self.currentPlayer:
@@ -61,8 +47,35 @@ class GameController(object):
         self.fromSquare.owner = None
         self.toSquare.owner = self.currentPlayer
 
-    def insert_piece(self):
-        self.toSquare.owner = self.currentPlayer
+    # Method for controlling piece insertion on the board. Checks all cases.
+    # Returns true if legal move, false if move is not legal.
+    def insert_piece(self) -> bool:
+        # Count number of pieces on the board of currentPlayer
+        count = 0
+        for i in range(12):
+            if self.board.squares[i].owner is self.currentPlayer:
+                count += 1
+
+        # Max no. of 4 pieces allowed on the board
+        if count >= 4:
+            return False
+
+        # If the square is occupied by another piece
+        if self.toSquare.owner is not None:
+            return False
+
+        # Black has to spawn a piece at the top row
+        if self.currentPlayer is self.players[0] and 9 <= self.board.squares.index(self.toSquare) <= 11:
+            self.toSquare.owner = self.currentPlayer
+            return True
+
+        # White has to spawn a piece at the bottom row
+        elif self.currentPlayer is self.players[1] and 0 <= self.board.squares.index(self.toSquare) <= 2:
+            self.toSquare.owner = self.currentPlayer
+            return True
+
+        # All other cases is not allowed for inserting a piece
+        return False
 
     def diagonal_move(self):
         return
