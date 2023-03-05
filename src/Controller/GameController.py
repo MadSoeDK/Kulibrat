@@ -29,9 +29,10 @@ class GameController(object):
         fromColumn = squares.index(self.fromSquare) % 3
         toColumn = squares.index(self.toSquare) % 3
         differenceInRow = int(squares.index(self.fromSquare) / 3) - int(squares.index(self.toSquare) / 3)
+        squareIsEmpty = self.toSquare.owner is None
 
-        # Regular move
-        if (fromColumn == toColumn + 1 or fromColumn == toColumn - 1) and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1):
+        # Diagonal move. currentPlayer has to move forward, and in a new column. The toSquare must be empty.
+        if toColumn is not fromColumn and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1) and squareIsEmpty:
             self.move()
             return True
 
