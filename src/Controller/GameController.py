@@ -43,9 +43,11 @@ class GameController(object):
             return True
 
         # Attack or move forward. currentPlayer has to move forward on a square that is not his own.
-        if (fromColumn == toColumn) and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1) and self.fromSquare.owner is not self.toSquare.owner:
+        if (fromColumn == toColumn) and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1) and self.fromSquare.owner is not self.toSquare.owner and self.toSquare.owner is not None:
             self.attack()
             return True
+        else:
+            return False
 
         # TODO: Jump move
         if fromColumn is toColumn and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1) and squareIsEmpty:
