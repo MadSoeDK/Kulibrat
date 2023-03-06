@@ -119,7 +119,9 @@ def draw_grid():
                 640, 20, 840, 220, fill="yellow"
             ))
 
-    canvas.create_text(800, 400, font='Pursia 20', text="current player: " + gameController.currentPlayer.color)
+    canvas.create_text(800, 300, font='Pursia 20', text="current player: " + gameController.currentPlayer.color)
+    canvas.create_text(800, 380, font='Pursia 30', text="Red point: " + str(gameController.players[1].points))
+    canvas.create_text(800, 440, font='Pursia 30', text="Black point: " + str(gameController.players[0].points))
 
     canvas.pack()
     canvas.update()
