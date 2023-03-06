@@ -59,12 +59,17 @@ class GameController(object):
                 _direction = -1
 
             # Check if the jump is legal
-            for x in range(differenceInRow):
-                if (self.board.squares(fromColumn + 3*x*_direction).owner == None):
+            for x in range(_direction*differenceInRow):
+                print(x)
+
+                if (self.board.get_square(self.board.squares.index(self.fromSquare) - 3*(x)*_direction).owner is None):
                     _allowJump = False
 
+
+            # If jump is legal, then jump
             if (_allowJump):
                 self.move()
+
             return _allowJump
 
         # Default return for now (only because not all cases are accounted for yet
