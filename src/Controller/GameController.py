@@ -46,12 +46,26 @@ class GameController(object):
         if (fromColumn == toColumn) and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1) and self.fromSquare.owner is not self.toSquare.owner and self.toSquare.owner is not None:
             self.attack()
             return True
-        else:
-            return False
+
 
         # TODO: Jump move
-        if fromColumn is toColumn and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1) and squareIsEmpty:
-            return
+        if fromColumn is toColumn and (differenceInRow > 1 if self.currentPlayer is self.players[0] else differenceInRow < -1) and squareIsEmpty:
+
+            # Set up variables for loop
+            _allowJump = True
+            if differenceInRow > 0:
+                _direction = 1
+            else:
+                _direction = -1
+
+            # Check if the jump is legal
+            for x in range(differenceInRow):
+                if (self.board.squares(fromColumn + 3*x*_direction).owner == None):
+                    _allowJump = False
+
+            if (_allowJump):
+                self.move()
+            return _allowJump
 
         # Default return for now (only because not all cases are accounted for yet
         return False
