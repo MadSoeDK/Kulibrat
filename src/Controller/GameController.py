@@ -38,7 +38,7 @@ class GameController(object):
         squareIsEmpty = self.toSquare.owner is None
 
         # Diagonal move. currentPlayer has to move forward, and in a new column. The toSquare must be empty.
-        if toColumn is not fromColumn and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1) and squareIsEmpty:
+        if toColumn is not fromColumn and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1) and squareIsEmpty and abs(fromColumn-toColumn) == 1:
             self.move()
             return True
 
@@ -49,7 +49,7 @@ class GameController(object):
 
 
         # TODO: Jump move
-        if fromColumn is toColumn and (differenceInRow > 1 if self.currentPlayer is self.players[0] else differenceInRow < -1) and squareIsEmpty:
+        if fromColumn is toColumn and abs(differenceInRow) > 1 and squareIsEmpty:
 
             # Set up variables for loop
             _allowJump = True
@@ -59,12 +59,9 @@ class GameController(object):
                 _direction = -1
 
             # Check if the jump is legal
-            for x in range(_direction*differenceInRow):
-                print(x)
-
-                if (self.board.get_square(self.board.squares.index(self.fromSquare) - 3*(x)*_direction).owner is None):
+            for x in range(1, _direction*differenceInRow):
+                if self.board.get_square(self.board.squares.index(self.fromSquare) - 3*x*_direction).owner is self.currentPlayer and not None:
                     _allowJump = False
-
 
             # If jump is legal, then jump
             if (_allowJump):
@@ -83,8 +80,26 @@ class GameController(object):
             self.currentPlayer.points += 1
             return True
 
+        if self.currentPlayer == self.players[0]:
+            if self.recursive_goal(int(self.board.squares.index(self.fromSquare) % 3)):
+                self.fromSquare.owner = None
+                self.currentPlayer.points += 1
+                return True
+        else:
+            if self.recursive_goal(int(self.board.squares.index(self.fromSquare) % 3) + 9):
+                self.fromSquare.owner = None
+                self.currentPlayer.points += 1
+                return True
+
         # Other cases not allowed
         return False
+
+    def recursive_goal(self, current_square_index) -> bool:
+        if self.board.squares.index(self.fromSquare) == current_square_index:
+            return True
+        if self.board.squares[current_square_index].owner is None or self.board.squares[current_square_index].owner is self.currentPlayer:
+            return False
+        return self.recursive_goal(current_square_index + 3 if self.currentPlayer is self.players[0] else current_square_index - 3)
 
     def move(self):
         self.fromSquare.owner = None
@@ -147,5 +162,5 @@ class GameController(object):
             self.fromSquare = None
             self.toSquare = None
             return
-        print(self.currentPlayer.color, " has ", self.currentPlayer.points, " points")
+        #print(self.currentPlayer.color, " has ", self.currentPlayer.points, " points")
         self.nextPlayer()
