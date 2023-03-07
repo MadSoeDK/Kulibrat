@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from src.Model import Square
 from src.Model.BoardModel import BoardModel
+from src.Model.Player import Player
 
 
 class Node(object):
@@ -9,7 +11,13 @@ class Node(object):
     BoardState: BoardState = None
     eval = None
 
+
 class BoardState(object):
     board: BoardModel = None
-    players = [None, None]
+    players = [Player for i in range(2)]
     moves: list = None
+
+
+class Move(object):
+    fromSquare: Square = None
+    toSquare: Square = None
