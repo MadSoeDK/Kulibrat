@@ -15,6 +15,7 @@ class Node(object):
 class BoardState(object):
     board: BoardModel = None
     players = [Player for i in range(2)]
+    currentPlayer: Player = None
     moves: list = None
 
 
