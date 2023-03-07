@@ -1,3 +1,4 @@
 import View.KulibratView
 
-staticmethod(View.KulibratView.launch())
+if __name__ == '__main__':
+    staticmethod(View.KulibratView.launch())
