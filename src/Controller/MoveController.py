@@ -69,7 +69,6 @@ def possibleMoves(state: BoardState) -> list[int, (int, int) in range[16]]:
                     listOfMoves.insert(moves, (i, i + 4))
                     moves += 1
 
-
     # spawn option
     if pieceOnBoard < 4:
         if state.currentPlayer is state.players[0]:
@@ -87,3 +86,19 @@ def possibleMoves(state: BoardState) -> list[int, (int, int) in range[16]]:
     for i in range(16):
         finalList.append(listOfMoves.pop())
     return finalList
+
+
+scoreRow = (0.25, 0.5, 0.75, 1)
+
+
+def eval(state: BoardState) -> int:
+    score = 0
+    score = score + state.players[0].points - state.players[1].points
+    for i in range(12):
+        if state.board.squares[i].owner is state.players[0]:
+            score += scoreRow[int((12 - i) / 3) - 1]
+        if state.board.squares[i].owner is state.players[1]:
+            score -= scoreRow[int(i / 3) - 1]
+    if state.currentPlayer is state.players[1]:
+        score *= -1
+    return score
