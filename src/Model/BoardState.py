@@ -8,8 +8,11 @@ from src.Model.Player import Player
 class Node(object):
     parent: Node = None
     children: list = None
-    BoardState: BoardState = None
     eval = None
+
+    def __init__ (self, boardState: BoardState, move: Move, parent: Node):
+        self.boardState = boardState
+        self.parent = parent
 
 
 class BoardState(object):
