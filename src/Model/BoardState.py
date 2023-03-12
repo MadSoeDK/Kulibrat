@@ -24,5 +24,6 @@ class BoardState(object):
 
 
 class Action(object):
-    fromSquare: Square = None
-    toSquare: Square = None
+    def __init__(self, s1: Square, s2: Square):
+        self.fromSquare = s1
+        self.toSquare = s2
