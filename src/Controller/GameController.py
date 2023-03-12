@@ -1,4 +1,6 @@
+from src.Controller.MoveController import possibleMoves
 from src.Model.BoardModel import BoardModel
+from src.Model.BoardState import BoardState
 from src.Model.Player import Player
 from src.Model.Square import Square
 
@@ -163,4 +165,6 @@ class GameController(object):
             self.toSquare = None
             return
         #print(self.currentPlayer.color, " has ", self.currentPlayer.points, " points")
+        temp = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
+        print(temp)
         self.nextPlayer()

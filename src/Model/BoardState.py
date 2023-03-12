@@ -18,9 +18,10 @@ class Node(object):
 
 
 class BoardState(object):
-    board: BoardModel = None
-    players = [Player for i in range(2)]
-    currentPlayer: Player = None
+    def __init__(self, board: BoardModel, players: list[Player, Player], currentPlayer: Player):
+        self.board = board
+        self.players = players
+        self.currentPlayer = currentPlayer
 
 
 class Action(object):
