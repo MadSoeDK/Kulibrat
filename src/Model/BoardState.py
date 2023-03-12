@@ -6,22 +6,23 @@ from src.Model.Player import Player
 
 
 class Node(object):
-    parent: Node = None
-    children: list = None
-    eval = None
-
-    def __init__ (self, boardState: BoardState, move: Move, parent: Node):
-        self.boardState = boardState
+    # state: The current board state
+    # parent: the node in the tree that generated this node
+    # action: the action that was applied to the parents state to generate this node
+    # The total cost of the path from the initial state to this node
+    def __init__(self, state: BoardState, parent: Node = None, action: Action = None, path_cost: int = None):
+        self.state = state
         self.parent = parent
+        self.action = action
+        self.path_cost = path_cost
 
 
 class BoardState(object):
     board: BoardModel = None
     players = [Player for i in range(2)]
     currentPlayer: Player = None
-    moves: list = None
 
 
-class Move(object):
+class Action(object):
     fromSquare: Square = None
     toSquare: Square = None
