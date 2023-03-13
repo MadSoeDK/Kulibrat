@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from src.Model import Square
+from src.Model.Square import Square
 from src.Model.BoardModel import BoardModel
 from src.Model.Player import Player
 

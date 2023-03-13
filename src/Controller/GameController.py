@@ -1,4 +1,4 @@
-from src.Controller.MoveController import possibleMoves
+from src.Controller.AiController import Problem, best_first_search
 from src.Model.BoardModel import BoardModel
 from src.Model.BoardState import BoardState
 from src.Model.Player import Player
@@ -164,20 +164,13 @@ class GameController(object):
             self.fromSquare = None
             self.toSquare = None
             return
-        #print(self.currentPlayer.color, " has ", self.currentPlayer.points, " points")
+
+        self.AIController()
         self.nextPlayer()
 
-        #TESTING
-        temp = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
-        print(temp)
-        for i in range(len(temp)):
-            start = ""
-            end = ""
-            for j in range(14):
-                if temp[i].fromSquare is self.board.squares[j]:
-                    start = str(j)
-                    continue
-                if temp[i].toSquare is self.board.squares[j]:
-                    end = str(j)
-                    continue
-            print(start + " to " + end)
+    def AIController(self):
+        problem = Problem(BoardState(self.board, self.players, self.currentPlayer))
+        node = best_first_search(problem)
+        print(node)
+
+
