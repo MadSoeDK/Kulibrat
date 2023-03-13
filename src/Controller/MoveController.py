@@ -15,7 +15,7 @@ def possibleMoves(state: BoardState):
             # blacks turn
             if state.currentPlayer is state.players[0]:
                 # attack move
-                if state.board.squares[i - 3].owner is not state.currentPlayer:
+                if state.board.squares[i - 3].owner is not state.currentPlayer and state.board.squares[i - 3].owner is not None:
                     listOfMoves.append(Action(state.board.squares[i], state.board.squares[i-3]))
                     moves += 1
                     # Skip move
@@ -23,7 +23,7 @@ def possibleMoves(state: BoardState):
                     while True:
                         jumpTo -= 3
                         if jumpTo < 0:
-                            listOfMoves.append(moves, Action(state.board.squares[i], state.board.squares[13]))
+                            listOfMoves.append(Action(state.board.squares[i], state.board.squares[12]))
                             moves += 1
                             break
                         if state.board.squares[jumpTo].owner is state.currentPlayer:
@@ -44,7 +44,7 @@ def possibleMoves(state: BoardState):
             # Reds turn
             else:
                 # attack move
-                if state.board.squares[i + 3].owner is not state.currentPlayer:
+                if state.board.squares[i + 3].owner is not state.currentPlayer and state.board.squares[i + 3].owner is not None:
                     listOfMoves.append(Action(state.board.squares[i], state.board.squares[i + 3]))
                     moves += 1
                     # Skip move
@@ -52,7 +52,7 @@ def possibleMoves(state: BoardState):
                     while True:
                         jumpTo += 3
                         if jumpTo > 11:
-                            listOfMoves.append(Action(state.board.squares[i], state.board.squares[14]))
+                            listOfMoves.append(Action(state.board.squares[i], state.board.squares[13]))
                             moves += 1
                             break
                         if state.board.squares[jumpTo].owner is state.currentPlayer:
@@ -80,7 +80,7 @@ def possibleMoves(state: BoardState):
         else:
             for i in range(3):
                 if state.board.squares[i].owner is None:
-                    listOfMoves.append(Action(state.board.squares[13], state.board.squares[i]))
+                    listOfMoves.append(Action(state.board.squares[12], state.board.squares[i]))
                     moves += 1
     return listOfMoves
 

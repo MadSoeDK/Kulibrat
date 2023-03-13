@@ -165,6 +165,19 @@ class GameController(object):
             self.toSquare = None
             return
         #print(self.currentPlayer.color, " has ", self.currentPlayer.points, " points")
+        self.nextPlayer()
+
+        #TESTING
         temp = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
         print(temp)
-        self.nextPlayer()
+        for i in range(len(temp)):
+            start = ""
+            end = ""
+            for j in range(14):
+                if temp[i].fromSquare is self.board.squares[j]:
+                    start = str(j)
+                    continue
+                if temp[i].toSquare is self.board.squares[j]:
+                    end = str(j)
+                    continue
+            print(start + " to " + end)
