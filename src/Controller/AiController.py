@@ -1,6 +1,8 @@
 import copy
 from queue import PriorityQueue
 
+import self as self
+
 from src.Model.BoardModel import BoardModel
 from src.Model.BoardState import Action, Node, BoardState
 from src.Controller.MoveController import possibleMoves
@@ -11,15 +13,16 @@ class Problem(object):
     def __init__(self, init_state: BoardState):
         self.init_state = init_state
 
+        # Create Graph structure
+        self.layered_graph = list()
+
     def is_goal(self, state: BoardState) -> bool:
         if state.currentPlayer.points == 1:
             return True
         return False
 
     def actions(self, state: BoardState) -> list:
-        moves = possibleMoves(state)
-        print(moves)
-        return moves
+        return possibleMoves(state)
 
     def result(self, state: BoardState, action: Action) -> BoardState:
         newState = copy.deepcopy(state)
@@ -54,19 +57,22 @@ def expand(problem: Problem, node: Node):
 
 
 def best_first_search(problem: Problem):
+    maxNodesSearched = 6
     node = Node(problem.init_state, path_cost=0)
+    problem.layered_graph.append(list())
     frontier = PriorityQueue()
     frontier.queue.append(node)
     reached = {problem.init_state: node}
-    while not frontier.empty():
+    for x in range(maxNodesSearched):
         node = frontier.queue.pop()
+        problem.layered_graph[len(problem.layered_graph) - 1].append(node)
         if problem.is_goal(node.state):
             return node
         for child in expand(problem, node):
             state = child.state
+            problem.layered_graph[len(problem.layered_graph)-1].append(child)
             if state not in reached or child.path_cost < reached[state].path_cost:
                 reached[state] = child
                 frontier.queue.append(child)
 
-    raise Exception
-
+        problem.layered_graph.append(list())
