@@ -1,3 +1,4 @@
+from src.AI.Pruning import pruning
 from src.Controller.AiController import Problem, best_first_search
 from src.Controller.MoveController import possibleMoves
 from src.Model.BoardModel import BoardModel
@@ -53,6 +54,8 @@ class GameController(object):
 
 
         # self.AIController() TODO: Does not work yet
+        if self.currentPlayer is self.players[1]:
+            print(pruning(BoardState(self.board, self.players, self.currentPlayer), 0, float('-inf'), self.currentPlayer))
 
         # TESTING
         print(self.moves)

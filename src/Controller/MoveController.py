@@ -90,18 +90,3 @@ def possibleMoves(state: BoardState):
                     moves += 1
     return listOfMoves
 
-
-scoreRow = (0.25, 0.5, 0.75, 1)
-
-
-def eval(state: BoardState) -> int:
-    score = 0
-    score = score + state.players[0].points - state.players[1].points
-    for i in range(12):
-        if state.board.squares[i].owner is state.players[0]:
-            score += scoreRow[int((12 - i) / 3) - 1]
-        if state.board.squares[i].owner is state.players[1]:
-            score -= scoreRow[int(i / 3) - 1]
-    if state.currentPlayer is state.players[1]:
-        score *= -1
-    return score
