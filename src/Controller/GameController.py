@@ -165,7 +165,7 @@ class GameController(object):
             self.toSquare = None
             return
 
-        self.AIController()
+        # self.AIController() TODO: Does not work yet
         self.nextPlayer()
 
     def AIController(self):
