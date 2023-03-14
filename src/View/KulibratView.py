@@ -89,10 +89,14 @@ def draw_grid():
 
     # Drawing the circles
     canvas.create_oval(640, 620, 840, 820, width=draw_width)
-    canvas.create_text(740, 720, font='Pursia 20', text="Spawn")
-
     canvas.create_oval(640, 20, 840, 220, width=draw_width)
-    canvas.create_text(740, 120, font='Pursia 20', text="Goal")
+
+    if gameController.currentPlayer is gameController.players[0]:
+        canvas.create_text(740, 720, font='Pursia 20', text="Spawn")
+        canvas.create_text(740, 120, font='Pursia 20', text="Goal")
+    else :
+        canvas.create_text(740, 720, font='Pursia 20', text="Goal")
+        canvas.create_text(740, 120, font='Pursia 20', text="Spawn")
 
     for i in range(12):
         if gameController.board.squares[i].owner is not None:
