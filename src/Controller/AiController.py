@@ -27,15 +27,17 @@ class Problem(object):
         # Set next current player
         if state.currentPlayer is state.players[0]:
             newState.currentPlayer = newState.players[1]
+            oldPlayer = newState.players[0]
         else:
             newState.currentPlayer = newState.players[0]
+            oldPlayer = newState.players[1]
 
         fromSquareIndex = state.board.squares.index(action.fromSquare)
         toSquareIndex = state.board.squares.index(action.toSquare)
 
         # Execute state squares
         newState.board.squares[fromSquareIndex].owner = None
-        newState.board.squares[toSquareIndex].owner = action.player
+        newState.board.squares[toSquareIndex].owner = oldPlayer
 
         return newState
 
