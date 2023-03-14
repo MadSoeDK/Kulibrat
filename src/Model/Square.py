@@ -2,6 +2,7 @@ from src.Model.Player import Player
 
 
 class Square(object):
-    selected = False
-    owner: Player = None
+    def __init__(self):
+        self.selected = False
+        self.owner: Player = None
 

@@ -1,6 +1,5 @@
 class Player(object):
-    pieces = 4
-    points = 0
-
-    def __init__(self, color):
+    def __init__(self, color, points: int = 0, pieces: int = 4):
         self.color = color
+        self.points = points
+        self.pieces = pieces

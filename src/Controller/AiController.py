@@ -1,8 +1,10 @@
 import copy
 from queue import PriorityQueue
 
+from src.Model.BoardModel import BoardModel
 from src.Model.BoardState import Action, Node, BoardState
 from src.Controller.MoveController import possibleMoves
+from src.Model.Player import Player
 
 
 class Problem(object):
@@ -20,23 +22,23 @@ class Problem(object):
         return moves
 
     def result(self, state: BoardState, action: Action) -> BoardState:
-        # Copy the old state
         newState = copy.deepcopy(state)
 
-        fromSquareIndex = newState.board.squares.index(action.fromSquare)
-        toSquareIndex = newState.board.squares.index(action.toSquare)
-
-        # Rearrange squares
-        newState.board.squares[fromSquareIndex].owner = None
-        newState.board.squares[toSquareIndex].owner = action.player
-
-        # Define next player
-        if action.player is state.players[0]:
-            nextPlayer = state.players[1]
+        # Set next current player
+        if state.currentPlayer is state.players[0]:
+            newState.currentPlayer = newState.players[1]
+            oldPlayer = newState.players[0]
         else:
-            nextPlayer = state.players[0]
+            newState.currentPlayer = newState.players[0]
+            oldPlayer = newState.players[1]
 
-        state.currentPlayer = nextPlayer
+        fromSquareIndex = state.board.squares.index(action.fromSquare)
+        toSquareIndex = state.board.squares.index(action.toSquare)
+
+        # Execute state squares
+        newState.board.squares[fromSquareIndex].owner = None
+        newState.board.squares[toSquareIndex].owner = oldPlayer
+
         return newState
 
     def action_cost(self, state: BoardState, action: Action, newState: BoardState) -> int:
