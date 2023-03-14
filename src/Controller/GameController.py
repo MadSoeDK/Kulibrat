@@ -20,84 +20,6 @@ class GameController(object):
         self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
 
     # Check if the move is valid and if so moves the piece
-    def _is_move_legal(self) -> bool:
-        # Spawn new piece control. Check that the correct button for the currentPlayer has been pressed.
-        if ((self.currentPlayer is self.players[0]) and (self.board.squares.index(self.fromSquare) == 13)) or (
-                self.currentPlayer is self.players[1] and self.board.squares.index(self.fromSquare) == 12):
-            return self.insert_piece()
-
-        # Check if player didn't select their own piece
-        if self.fromSquare.owner is not self.currentPlayer:
-            return False
-
-        # Home run! currentPlayer have gotten a piece home and gets a point.
-        # Check if pieces are at the last row and the correct button is pressed
-        if ((self.currentPlayer is self.players[0]) and (self.board.squares.index(self.toSquare) == 12)) or (
-                self.currentPlayer is self.players[1] and self.board.squares.index(self.toSquare) == 13):
-            return self.home_run()
-
-        squares = self.board.squares
-        fromColumn = squares.index(self.fromSquare) % 3
-        toColumn = squares.index(self.toSquare) % 3
-        differenceInRow = int(squares.index(self.fromSquare) / 3) - int(squares.index(self.toSquare) / 3)
-        squareIsEmpty = self.toSquare.owner is None
-
-        # Diagonal move. currentPlayer has to move forward, and in a new column. The toSquare must be empty.
-        if toColumn is not fromColumn and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1) and squareIsEmpty and abs(fromColumn-toColumn) == 1:
-            self.move()
-            return True
-
-        # Attack or move forward. currentPlayer has to move forward on a square that is not his own.
-        if (fromColumn == toColumn) and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1) and self.fromSquare.owner is not self.toSquare.owner and self.toSquare.owner is not None:
-            self.attack()
-            return True
-
-        # TODO: Jump move
-        if fromColumn is toColumn and abs(differenceInRow) > 1 and squareIsEmpty:
-
-            # Set up variables for loop
-            _allowJump = True
-            if differenceInRow > 0:
-                _direction = 1
-            else:
-                _direction = -1
-
-            # Check if the jump is legal
-            for x in range(1, _direction*differenceInRow):
-                if self.board.get_square(self.board.squares.index(self.fromSquare) - 3*x*_direction).owner is self.currentPlayer and not None:
-                    _allowJump = False
-
-            # If jump is legal, then jump
-            if (_allowJump):
-                self.move()
-
-            return _allowJump
-
-        # Default return for now (only because not all cases are accounted for yet
-        return False
-
-    def home_run(self):
-        # Black has to be at the top row, or white at the bottom row
-        if (self.currentPlayer is self.players[0] and 0 <= self.board.squares.index(self.fromSquare) <= 2) or (
-                self.currentPlayer is self.players[1] and 9 <= self.board.squares.index(self.fromSquare) <= 11):
-            self.fromSquare.owner = None
-            self.currentPlayer.points += 1
-            return True
-
-        if self.currentPlayer == self.players[0]:
-            if self.recursive_goal(int(self.board.squares.index(self.fromSquare) % 3)):
-                self.fromSquare.owner = None
-                self.currentPlayer.points += 1
-                return True
-        else:
-            if self.recursive_goal(int(self.board.squares.index(self.fromSquare) % 3) + 9):
-                self.fromSquare.owner = None
-                self.currentPlayer.points += 1
-                return True
-
-        # Other cases not allowed
-        return False
-
     def nextPlayer(self):
         self.fromSquare = None
         self.toSquare = None
@@ -122,6 +44,12 @@ class GameController(object):
                 self.toSquare.owner = self.currentPlayer
                 self.nextPlayer()
                 self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
+                if len(self.moves) == 0:
+                    self.nextPlayer()
+                    self.moves = self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
+                    if len(self.moves) == 0:
+                        self.gameOver()
+
 
 
         # self.AIController() TODO: Does not work yet
@@ -139,6 +67,9 @@ class GameController(object):
                     end = str(j)
                     continue
             print(start + " to " + end)
+
+    def gameOver(self):
+        None
 
     def AIController(self):
         problem = Problem(BoardState(self.board, self.players, self.currentPlayer))
