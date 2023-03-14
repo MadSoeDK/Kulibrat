@@ -98,54 +98,6 @@ class GameController(object):
         # Other cases not allowed
         return False
 
-    def recursive_goal(self, current_square_index) -> bool:
-        if self.board.squares.index(self.fromSquare) == current_square_index:
-            return True
-        if self.board.squares[current_square_index].owner is None or self.board.squares[current_square_index].owner is self.currentPlayer:
-            return False
-        return self.recursive_goal(current_square_index + 3 if self.currentPlayer is self.players[0] else current_square_index - 3)
-
-    def move(self):
-        self.fromSquare.owner = None
-        self.toSquare.owner = self.currentPlayer
-
-    # Method for controlling piece insertion on the board. Checks all cases.
-    # Returns true if legal move, false if move is not legal.
-    def insert_piece(self) -> bool:
-        # Count number of pieces on the board of currentPlayer
-        count = 0
-        for i in range(12):
-            if self.board.squares[i].owner is self.currentPlayer:
-                count += 1
-
-        # Max no. of 4 pieces allowed on the board
-        if count >= 4:
-            return False
-
-        # If the square is occupied by another piece
-        if self.toSquare.owner is not None:
-            return False
-
-        # Black has to spawn a piece at the top row
-        if self.currentPlayer is self.players[0] and 9 <= self.board.squares.index(self.toSquare) <= 11:
-            self.toSquare.owner = self.currentPlayer
-            return True
-
-        # White has to spawn a piece at the bottom row
-        elif self.currentPlayer is self.players[1] and 0 <= self.board.squares.index(self.toSquare) <= 2:
-            self.toSquare.owner = self.currentPlayer
-            return True
-
-        # All other cases is not allowed for inserting a piece
-        return False
-
-    def attack(self):
-        self.fromSquare.owner = None
-        self.toSquare.owner = self.currentPlayer
-
-    def jump(self):
-        return
-
     def nextPlayer(self):
         self.fromSquare = None
         self.toSquare = None
@@ -164,6 +116,8 @@ class GameController(object):
 
         for move in self.moves:
             if move.fromSquare is self.fromSquare and move.toSquare is self.toSquare:
+                if self.board.squares.index(self.toSquare) > 11:
+                    self.currentPlayer.points += 1
                 self.fromSquare.owner = None
                 self.toSquare.owner = self.currentPlayer
                 self.nextPlayer()

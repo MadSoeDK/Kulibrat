@@ -32,13 +32,16 @@ def possibleMoves(state: BoardState):
                             moves += 1
                             break
 
-                # Forward Right and Left move
-                if (i % 3 == 1 or i % 3 == 0) and state.board.squares[i - 2].owner is None:
-                    listOfMoves.append(Action(state.board.squares[i], state.board.squares[i - 2]))
-                    moves += 1
-                if (i % 3 == 1 or i % 3 == 2) and state.board.squares[i - 4].owner is None:
-                    listOfMoves.append(Action(state.board.squares[i], state.board.squares[i - 4]))
-                    moves += 1
+                if 0 <= i <= 2:
+                    listOfMoves.append(Action(state.board.squares[i], state.board.squares[12]))
+                else:
+                    # Forward Right and Left move
+                    if (i % 3 == 1 or i % 3 == 0) and state.board.squares[i - 2].owner is None:
+                        listOfMoves.append(Action(state.board.squares[i], state.board.squares[i - 2]))
+                        moves += 1
+                    if (i % 3 == 1 or i % 3 == 2) and state.board.squares[i - 4].owner is None:
+                        listOfMoves.append(Action(state.board.squares[i], state.board.squares[i - 4]))
+                        moves += 1
 
             # Reds turn
             else:
@@ -61,13 +64,17 @@ def possibleMoves(state: BoardState):
                             moves += 1
                             break
 
-                # Forward Right and Left move
-                if (i % 3 == 1 or i % 3 == 0) and state.board.squares[i + 4].owner is None:
-                    listOfMoves.append(Action(state.board.squares[i], state.board.squares[i + 4]))
-                    moves += 1
-                if (i % 3 == 1 or i % 3 == 2) and state.board.squares[i + 2].owner is None:
-                    listOfMoves.append(Action(state.board.squares[i], state.board.squares[i + 2]))
-                    moves += 1
+                # Goal Move
+                if 9 <= i <= 11:
+                    listOfMoves.append(Action(state.board.squares[i], state.board.squares[13]))
+                else:
+                    # Forward Right and Left move
+                    if (i % 3 == 1 or i % 3 == 0) and state.board.squares[i + 4].owner is None:
+                        listOfMoves.append(Action(state.board.squares[i], state.board.squares[i + 4]))
+                        moves += 1
+                    if (i % 3 == 1 or i % 3 == 2) and state.board.squares[i + 2].owner is None:
+                        listOfMoves.append(Action(state.board.squares[i], state.board.squares[i + 2]))
+                        moves += 1
 
     # spawn option
     if pieceOnBoard < 4:
