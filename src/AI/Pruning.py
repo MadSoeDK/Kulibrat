@@ -2,21 +2,32 @@ import copy
 import math
 
 from src.Controller.MoveController import possibleMoves
-from src.Model.BoardModel import BoardModel
 from src.Model.BoardState import BoardState, Action
 from src.Model.Player import Player
 
 
-def pruning(state: BoardState, dept, pre_calc: float, desired_player: Player) -> float:
-    if dept == 3:
+def pruning_start(state: BoardState, desired_player_index: int) -> Action:
+    moves = possibleMoves(state)
+    best_action: Action
+    best_value = float('-inf')
+    for move in moves:
+        value = pruning(result(state, move), 1, desired_player_index)
+        if value > best_value:
+            best_action = move
+            best_value = value
+    return best_action
+
+
+def pruning(state: BoardState, dept, desired_player_index: int) -> float:
+    if dept == 7:
         return eval_state(state)
     moves = possibleMoves(state)
-    calc = pre_calc
+    calc = float('-inf') if state.players.index(state.currentPlayer) == desired_player_index else float('inf')
     for move in moves:
-        if state.currentPlayer is desired_player:
-            calc = max(calc, pruning(result(state, move), dept + 1, pre_calc * -1, desired_player))
+        if state.players.index(state.currentPlayer) == desired_player_index:
+            calc = max(calc, pruning(result(state, move), dept + 1, desired_player_index))
         else:
-            calc = min(calc, pruning(result(state, move), dept + 1, pre_calc * - 1, desired_player))
+            calc = min(calc, pruning(result(state, move), dept + 1, desired_player_index))
     return calc
 
 
@@ -28,11 +39,9 @@ def eval_state(state: BoardState) -> float:
     score = state.players[1].points * goal_point - state.players[0].points * goal_point
     for i in range(12):
         if state.board.squares[i].owner is state.players[0]:
-            score -= score_row[math.floor((12 - i) / 3)]
+            score -= score_row[math.floor((11 - i) / 3)]
         if state.board.squares[i].owner is state.players[1]:
             score += score_row[math.floor(i / 3)]
-    if state.currentPlayer is state.players[1]:
-        score *= -1
     return score
 
 
@@ -74,5 +83,8 @@ def result(state: BoardState, action: Action) -> BoardState:
 
     if toSquareIndex in (12, 13):
         oldPlayer.points += 1
+
+    newState.board.squares[12].owner = None
+    newState.board.squares[13].owner = None
 
     return newState

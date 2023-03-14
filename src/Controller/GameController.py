@@ -1,4 +1,4 @@
-from src.AI.Pruning import pruning
+from src.AI.Pruning import pruning, pruning_start
 from src.Controller.AiController import Problem, best_first_search
 from src.Controller.MoveController import possibleMoves
 from src.Model.BoardModel import BoardModel
@@ -47,7 +47,7 @@ class GameController(object):
                 self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
                 if len(self.moves) == 0:
                     self.nextPlayer()
-                    self.moves = self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
+                    self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
                     if len(self.moves) == 0:
                         self.gameOver()
 
@@ -55,10 +55,16 @@ class GameController(object):
 
         # self.AIController() TODO: Does not work yet
         if self.currentPlayer is self.players[1]:
-            print(pruning(BoardState(self.board, self.players, self.currentPlayer), 0, float('-inf'), self.currentPlayer))
+            red_move = pruning_start(BoardState(self.board, self.players, self.currentPlayer), self.players.index(self.currentPlayer))
+            print("from: " + str(red_move.fromSquare.num) + " to: " + str(red_move.toSquare.num))
+            red_move.fromSquare.owner = None
+            red_move.toSquare.owner = self.currentPlayer
+            if self.board.squares.index(red_move.toSquare) == 12:
+                self.currentPlayer.points += 1
+            self.nextPlayer()
+            self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
 
         # TESTING
-        print(self.moves)
         for i in range(len(self.moves)):
             start = ""
             end = ""
@@ -70,6 +76,7 @@ class GameController(object):
                     end = str(j)
                     continue
             print(start + " to " + end)
+        print()
 
     def gameOver(self):
         None

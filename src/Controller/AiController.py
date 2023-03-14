@@ -1,8 +1,6 @@
 import copy
 from queue import PriorityQueue
 
-import self as self
-
 from src.Model.BoardModel import BoardModel
 from src.Model.BoardState import Action, Node, BoardState
 from src.Controller.MoveController import possibleMoves

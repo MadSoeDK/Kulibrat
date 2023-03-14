@@ -45,25 +45,6 @@ def possibleMoves(state: BoardState):
 
             # Reds turn
             else:
-                # attack move
-                if state.board.squares[i + 3].owner is not state.currentPlayer and state.board.squares[i + 3].owner is not None:
-                    listOfMoves.append(Action(state.board.squares[i], state.board.squares[i + 3]))
-                    moves += 1
-                    # Skip move
-                    jumpTo = i
-                    while True:
-                        jumpTo += 3
-                        if jumpTo > 11:
-                            listOfMoves.append(Action(state.board.squares[i], state.board.squares[13]))
-                            moves += 1
-                            break
-                        if state.board.squares[jumpTo].owner is state.currentPlayer:
-                            break
-                        if state.board.squares[jumpTo].owner is None:
-                            listOfMoves.append(Action(state.board.squares[i], state.board.squares[jumpTo]))
-                            moves += 1
-                            break
-
                 # Goal Move
                 if 9 <= i <= 11:
                     listOfMoves.append(Action(state.board.squares[i], state.board.squares[13]))
@@ -75,6 +56,24 @@ def possibleMoves(state: BoardState):
                     if (i % 3 == 1 or i % 3 == 2) and state.board.squares[i + 2].owner is None:
                         listOfMoves.append(Action(state.board.squares[i], state.board.squares[i + 2]))
                         moves += 1
+                    # attack move
+                    if state.board.squares[i + 3].owner is not state.currentPlayer and state.board.squares[i + 3].owner is not None:
+                        listOfMoves.append(Action(state.board.squares[i], state.board.squares[i + 3]))
+                        moves += 1
+                        # Skip move
+                        jumpTo = i
+                        while True:
+                            jumpTo += 3
+                            if jumpTo > 11:
+                                listOfMoves.append(Action(state.board.squares[i], state.board.squares[13]))
+                                moves += 1
+                                break
+                            if state.board.squares[jumpTo].owner is state.currentPlayer:
+                                break
+                            if state.board.squares[jumpTo].owner is None:
+                                listOfMoves.append(Action(state.board.squares[i], state.board.squares[jumpTo]))
+                                moves += 1
+                                break
 
     # spawn option
     if pieceOnBoard < 4:
