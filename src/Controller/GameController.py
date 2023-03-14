@@ -17,6 +17,8 @@ class GameController(object):
         # 0 = Black Player, 1 = Red Player
         self.currentPlayer = self.players[0]
 
+        self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
+
     # Check if the move is valid and if so moves the piece
     def _is_move_legal(self) -> bool:
         # Spawn new piece control. Check that the correct button for the currentPlayer has been pressed.
@@ -49,7 +51,6 @@ class GameController(object):
         if (fromColumn == toColumn) and differenceInRow == (1 if self.currentPlayer is self.players[0] else -1) and self.fromSquare.owner is not self.toSquare.owner and self.toSquare.owner is not None:
             self.attack()
             return True
-
 
         # TODO: Jump move
         if fromColumn is toColumn and abs(differenceInRow) > 1 and squareIsEmpty:
@@ -161,25 +162,26 @@ class GameController(object):
         else:
             self.toSquare = self.board.squares[square_index - 1]
 
-        if self._is_move_legal() is False:
-            self.fromSquare = None
-            self.toSquare = None
-            return
+        for move in self.moves:
+            if move.fromSquare is self.fromSquare and move.toSquare is self.toSquare:
+                self.fromSquare.owner = None
+                self.toSquare.owner = self.currentPlayer
+                self.nextPlayer()
+                self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
+
 
         # self.AIController() TODO: Does not work yet
-        self.nextPlayer()
 
         # TESTING
-        temp = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
-        print(temp)
-        for i in range(len(temp)):
+        print(self.moves)
+        for i in range(len(self.moves)):
             start = ""
             end = ""
             for j in range(14):
-                if temp[i].fromSquare is self.board.squares[j]:
+                if self.moves[i].fromSquare is self.board.squares[j]:
                     start = str(j)
                     continue
-                if temp[i].toSquare is self.board.squares[j]:
+                if self.moves[i].toSquare is self.board.squares[j]:
                     end = str(j)
                     continue
             print(start + " to " + end)
@@ -188,5 +190,3 @@ class GameController(object):
         problem = Problem(BoardState(self.board, self.players, self.currentPlayer))
         node = best_first_search(problem)
         print(node)
-
-

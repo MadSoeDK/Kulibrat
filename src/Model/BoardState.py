@@ -25,7 +25,6 @@ class BoardState(object):
 
 
 class Action(object):
-    def __init__(self, fromSquare: Square, toSquare: Square, player: Player):
+    def __init__(self, fromSquare: Square, toSquare: Square):
         self.fromSquare = fromSquare
         self.toSquare = toSquare
-        self.player = player
