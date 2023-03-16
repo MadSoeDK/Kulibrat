@@ -1,4 +1,4 @@
-from src.AI.Pruning import pruning, pruning_start
+from src.AI.min_max_DFS import pruning, pruning_start
 from src.Controller.AiController import Problem, best_first_search
 from src.Controller.MoveController import possibleMoves
 from src.Model.BoardModel import BoardModel
