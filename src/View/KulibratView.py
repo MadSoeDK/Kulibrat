@@ -49,6 +49,10 @@ def callback(e):
     global canvas
     canvas.delete('all')
     draw_grid()
+    while gameController.currentPlayer is gameController.players[1]:
+        gameController.AI_turn()
+        draw_grid()
+
 
 
 def draw_grid():

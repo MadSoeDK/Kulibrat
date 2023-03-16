@@ -3,9 +3,7 @@ import math
 
 from src.Controller.MoveController import possibleMoves
 from src.Model.BoardState import BoardState, Action
-from src.Model.Player import Player
 
-my_dict = dict()
 
 def pruning_start(state: BoardState, desired_player_index: int) -> Action:
     moves = possibleMoves(state)
@@ -24,6 +22,13 @@ def pruning(state: BoardState, dept, desired_player_index: int, initial_state_va
     if dept == 7:
         return eval_state(state)
 
+    #Game Done
+    if state.players[0].points == 5:
+        return float('-inf')
+    elif state.players[1].points == 5:
+        return float('inf')
+
+
     moves = possibleMoves(state)
     calc = float('-inf') if state.players.index(state.currentPlayer) == desired_player_index else float('inf')
 
@@ -31,7 +36,10 @@ def pruning(state: BoardState, dept, desired_player_index: int, initial_state_va
     if not moves:
         new_state = copy.deepcopy(state)
         new_state.currentPlayer = new_state.players[0] if new_state.currentPlayer is new_state.players[1] else new_state.players[1]
-        pruning(new_state, dept + 1, desired_player_index, initial_state_value)
+        if not possibleMoves(new_state):
+            return float('inf') if new_state.currentPlayer is new_state.players[0] else float('-inf')
+
+        pruning(new_state, dept, desired_player_index, initial_state_value)
 
     for move in moves:
         if state.players.index(state.currentPlayer) == desired_player_index:
