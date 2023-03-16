@@ -8,26 +8,53 @@ from src.Model.BoardState import BoardState, Action
 def pruning_start(state: BoardState, desired_player_index: int) -> Action:
     """ min/max algorithm for finding the best move from the current position
 
+        initial call in the state tree. The tree is explored using a DFS using recursive call.
+        This is seperated from the other pruning method, as we need the initial state to return an action and
+        not just how great a position the AI have.
+
+        desired_player_index is to allow for multiple player to run as bots. This could be used to improve on the values
+        used to calculate the Heuristic value.
+
+        Args:
+            state: The boardState of which we want the best move for
+            desired_player_index: The index of the player that we want to find the best move for, from the players list in the given state
+
+        :return the action from the given BoardState that gives the best possible outcome, given that both player, playes ideal by the Heuristic values.
+        return None if, and only if there is not possible move in the current state.
+    """
+    # List of possible moves in the current state
+    moves = possibleMoves(state)
+    best_action = None
+    best_value = float('-inf')
+    # for each possible note, we DFS search these as child notes to our root
+    for move in moves:
+        value = pruning(result(state, move), 1, desired_player_index)
+        # Figures what DFS tree had the best value
+        if value > best_value:
+            best_action = move
+            best_value = value
+
+    # if no best_action exist
+    if best_value is None:
+        raise Exception("Invalid game stated passed")
+    return best_action
+
+
+def pruning(state: BoardState, dept, desired_player_index: int) -> float:
+    """ min/max algorithm for finding the best move from the current position
+
         By using pre-defined values, it computes the Heuristic value by
         adding together the position value of red pieces, with the value for each scored point
         and substracting the same, but calculated for blacks pieces
 
         Args:
             state: The boardState of which we want the best move for
+            dept: How deep in the tree we are, assuming the root is dept 0
             desired_player_index: The index of the player that we want to find the best move for, from the players list in the given state
-        """
-    moves = possibleMoves(state)
-    best_action: Action
-    best_value = float('-inf')
-    for move in moves:
-        value = pruning(result(state, move), 1, desired_player_index, eval_state(state))
-        if value > best_value:
-            best_action = move
-            best_value = value
-    return best_action
 
+        :return the Heuristic value that the given board state would lead to if both players play ideal
+    """
 
-def pruning(state: BoardState, dept, desired_player_index: int, initial_state_value: float) -> float:
     # Max dept to check
     if dept == 7:
         return eval_state(state)
@@ -57,16 +84,16 @@ def pruning(state: BoardState, dept, desired_player_index: int, initial_state_va
             return float('inf') if new_state.currentPlayer is new_state.players[0] else float('-inf')
 
         # recursively call with the new state
-        pruning(new_state, dept, desired_player_index, initial_state_value)
+        pruning(new_state, dept, desired_player_index)
 
     # Recursively call this methods, for each possible gamestate that is reachable from here.
     for move in moves:
         # The bot always want make the best move, and therefor picks the move with the highest Heuristic value
         if state.players.index(state.currentPlayer) == desired_player_index:
-            calc = max(calc, pruning(result(state, move), dept + 1, desired_player_index, initial_state_value))
+            calc = max(calc, pruning(result(state, move), dept + 1, desired_player_index))
         # On the players turns, we expect them to make the best possible move, and therefor we go with the lowest heuristic value
         else:
-            calc = min(calc, pruning(result(state, move), dept + 1, desired_player_index, initial_state_value))
+            calc = min(calc, pruning(result(state, move), dept + 1, desired_player_index))
     return calc
 
 
@@ -109,9 +136,7 @@ def result(state: BoardState, action: Action) -> BoardState:
         state: current boardstate
         action: action that would be taken
 
-    Returns:
-        BoardState: The new generated board state
-
+    :return BoardState: The new generated board state
     """
     newState = copy.deepcopy(state)
 
