@@ -98,10 +98,11 @@ def draw_grid():
     canvas.create_oval(640, 620, 840, 820, width=draw_width)
     canvas.create_oval(640, 20, 840, 220, width=draw_width)
 
+    # Switch button text depending on currentplayer
     if gameController.currentPlayer is gameController.players[0]:
         canvas.create_text(740, 720, font='Pursia 20', text="Spawn")
         canvas.create_text(740, 120, font='Pursia 20', text="Goal")
-    else :
+    else:
         canvas.create_text(740, 720, font='Pursia 20', text="Goal")
         canvas.create_text(740, 120, font='Pursia 20', text="Spawn")
 
@@ -131,9 +132,27 @@ def draw_grid():
                 640, 20, 840, 220, fill="yellow"
             ))
 
-    canvas.create_text(800, 300, font='Pursia 20', text="current player: " + gameController.currentPlayer.color)
-    canvas.create_text(800, 380, font='Pursia 30', text="Red point: " + str(gameController.players[1].points))
-    canvas.create_text(800, 440, font='Pursia 30', text="Black point: " + str(gameController.players[0].points))
+    # Game-over Text and buttons
+    if gameController.players[1].points == 5 or gameController.players[0].points == 5:
+
+        if gameController.players[1].points == 5:
+            canvas.create_text(815, 480, font='Pursia 25', text=gameController.players[1].color + " Player has WON")
+
+        if gameController.players[0].points == 5:
+            canvas.create_text(815, 480, font='Pursia 25', text=gameController.players[1].color + " Player has WON")
+
+        canvas.create_oval(650, 520, 800, 580, width=draw_width)
+        canvas.create_text(725, 550, font='Pursia 20', text="Restart")
+
+        canvas.create_oval(830, 520, 980, 580, width=draw_width)
+        canvas.create_text(905, 550, font='Pursia 20', text="Exit Game")
+
+        return None
+
+    # Current-player and points text
+    canvas.create_text(800, 260, font='Pursia 20', text="current player: " + gameController.currentPlayer.color)
+    canvas.create_text(800, 320, font='Pursia 30', text="Red point: " + str(gameController.players[1].points))
+    canvas.create_text(800, 370, font='Pursia 30', text="Black point: " + str(gameController.players[0].points))
 
     canvas.pack()
     canvas.update()
