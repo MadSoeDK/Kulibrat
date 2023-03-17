@@ -1,3 +1,6 @@
+import os
+import sys
+
 from src.AI.min_max_DFS import pruning, pruning_start
 from src.Controller.AiController import Problem, best_first_search
 from src.Controller.MoveController import possibleMoves
@@ -51,7 +54,6 @@ class GameController(object):
                 self.toSquare.owner = self.currentPlayer
                 self.nextPlayer(0)
 
-
         # TESTING
         for i in range(len(self.moves)):
             start = ""
@@ -69,6 +71,10 @@ class GameController(object):
     def gameOver(self):
         None
 
+    def restart(self):
+        if __name__ == '__main__':
+            os.execv(__file__, sys.argv)
+
     def AIController(self):
         problem = Problem(BoardState(self.board, self.players, self.currentPlayer))
         node = best_first_search(problem)
@@ -76,13 +82,11 @@ class GameController(object):
 
     def AI_turn(self):
         if self.currentPlayer is self.players[1]:
-            red_move = pruning_start(BoardState(self.board, self.players, self.currentPlayer), self.players.index(self.currentPlayer))
+            red_move = pruning_start(BoardState(self.board, self.players, self.currentPlayer),
+                                     self.players.index(self.currentPlayer))
             print("from: " + str(red_move.fromSquare.num) + " to: " + str(red_move.toSquare.num))
             red_move.fromSquare.owner = None
             red_move.toSquare.owner = self.currentPlayer
             if self.board.squares.index(red_move.toSquare) == 13:
                 self.currentPlayer.points += 1
             self.nextPlayer(0)
-
-
-

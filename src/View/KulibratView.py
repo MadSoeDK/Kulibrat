@@ -50,7 +50,7 @@ def callback(e):
     # calc for Game-over buttons
     if gameController.players[1].points == 5 or gameController.players[0].points == 5:
         if math.sqrt(((e.x - 725) ** 2) + ((e.y - 550) ** 2)) < 65:
-            exit() #TODO:change to restart the game
+            gameController.restart()
         elif math.sqrt(((e.x - 905) ** 2) + ((e.y - 550) ** 2)) < 65:
             exit()
 
