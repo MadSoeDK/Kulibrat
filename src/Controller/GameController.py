@@ -72,8 +72,10 @@ class GameController(object):
         None
 
     def restart(self):
-        if __name__ == '__main__':
-            os.execv(__file__, sys.argv)
+        print("Restarting")
+        # if __name__ == '__main__':
+        python = sys.executable
+        os.execl(python, python, *sys.argv)
 
     def AIController(self):
         problem = Problem(BoardState(self.board, self.players, self.currentPlayer))
