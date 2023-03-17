@@ -73,9 +73,13 @@ class GameController(object):
 
     def restart(self):
         print("Restarting")
-        # if __name__ == '__main__':
-        python = sys.executable
-        os.execl(python, python, *sys.argv)
+
+        for Player.Square in self.board.squares:
+            Player.Square.owner = None
+            # print(Player.Square.owner)
+
+        self.players[0].points = 0
+        self.players[1].points = 0
 
     def AIController(self):
         problem = Problem(BoardState(self.board, self.players, self.currentPlayer))
