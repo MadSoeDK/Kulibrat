@@ -47,6 +47,13 @@ def callback(e):
     elif math.sqrt(((e.x - 740) ** 2) + ((e.y - 720) ** 2)) < 100:
         gameController.click(14)
 
+    # calc for Game-over buttons
+    if gameController.players[1].points == 5 or gameController.players[0].points == 5:
+        if math.sqrt(((e.x - 725) ** 2) + ((e.y - 550) ** 2)) < 65:
+            exit() #TODO:change to restart the game
+        elif math.sqrt(((e.x - 905) ** 2) + ((e.y - 550) ** 2)) < 65:
+            exit()
+
     # Clear the old canvas to prepare drawing a new screen
     global canvas
     canvas.delete('all')
@@ -65,7 +72,6 @@ def draw_grid():
     global gameController
     width = 640
     height = 840
-
 
     canvas.delete('all')
     canvas.pack()
