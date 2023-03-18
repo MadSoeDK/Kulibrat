@@ -88,9 +88,12 @@ class GameController(object):
 
     def AI_turn(self):
         if self.currentPlayer is self.players[1]:
-            red_move = pruning_start(BoardState(self.board, self.players, self.currentPlayer),
+            if self.game_mode_hard:
+                red_move = pruning_start(BoardState(self.board, self.players, self.currentPlayer),
                                      self.players.index(self.currentPlayer))
-            print("from: " + str(red_move.fromSquare.num) + " to: " + str(red_move.toSquare.num))
+            else:
+                red_move = random_agent(BoardState(self.board, self.players, self.currentPlayer))
+            #print("from: " + str(red_move.fromSquare.num) + " to: " + str(red_move.toSquare.num))
             red_move.fromSquare.owner = None
             red_move.toSquare.owner = self.currentPlayer
             if self.board.squares.index(red_move.toSquare) == 13:
