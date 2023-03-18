@@ -1,7 +1,6 @@
-from src.AI.min_max_DFS import pruning_start
+from src.AI.min_max_DFS import pruning_start, actions
 from src.AI.random_agent import random_agent
 from src.Controller.AiController import Problem, best_first_search
-from src.Controller.MoveController import possibleMoves
 from src.Model.BoardModel import BoardModel
 from src.Model.BoardState import BoardState
 from src.Model.Player import Player
@@ -20,7 +19,7 @@ class GameController(object):
         # 0 = Black Player, 1 = Red Player
         self.currentPlayer = self.players[0]
 
-        self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
+        self.moves = actions(BoardState(self.board, self.players, self.currentPlayer))
 
     # Check if the move is valid and if so moves the piece
     def nextPlayer(self, count: int):
@@ -30,7 +29,7 @@ class GameController(object):
         if count == 2:
             self.gameOver()
         self.currentPlayer = self.players[(self.players.index(self.currentPlayer) + 1) % 2]
-        self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
+        self.moves = actions(BoardState(self.board, self.players, self.currentPlayer))
         if not self.moves:
             self.nextPlayer(count + 1)
 
