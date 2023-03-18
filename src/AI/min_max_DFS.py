@@ -5,7 +5,7 @@ from src.Controller.MoveController import possibleMoves
 from src.Model.BoardState import BoardState, Action
 
 
-def pruning_start(state: BoardState, current_player_index: int) -> Action:
+def pruning_start(state: BoardState, current_player_index: int, moves: list) -> Action:
     """ min/max algorithm for finding the best move from the current position
 
         initial call in the state tree. The tree is explored using a DFS using recursive call.
@@ -18,6 +18,7 @@ def pruning_start(state: BoardState, current_player_index: int) -> Action:
         Args:
             state: The boardState of which we want the best move for
             current_player_index: The index of the player that we want to find the best move for, from the players list in the given state
+            moves: possible moves given the state
 
         :return the action from the given BoardState that gives the best possible outcome, given that both player, playes ideal by the Heuristic values.
         return None if, and only if there is not possible move in the current state.
@@ -26,7 +27,7 @@ def pruning_start(state: BoardState, current_player_index: int) -> Action:
     best_action = None
     best_value = float('-inf')
     # for each possible note, we DFS search these as child notes to our root
-    for move in possibleMoves(state):
+    for move in moves:
         value = pruning(result(state, move), 1, current_player_index)
         # Figures what DFS tree had the best value
         if value > best_value:

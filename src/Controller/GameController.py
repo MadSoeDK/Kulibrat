@@ -1,7 +1,5 @@
-import os
-import sys
-
-from src.AI.min_max_DFS import pruning, pruning_start
+from src.AI.min_max_DFS import pruning_start
+from src.AI.random_agent import random_agent
 from src.Controller.AiController import Problem, best_first_search
 from src.Controller.MoveController import possibleMoves
 from src.Model.BoardModel import BoardModel
@@ -17,6 +15,7 @@ class GameController(object):
         self.players = [Player("black"), Player("red")]
         self.toSquare: Square = None
         self.fromSquare: Square = None
+        self.game_mode_hard = True
 
         # 0 = Black Player, 1 = Red Player
         self.currentPlayer = self.players[0]
@@ -90,7 +89,7 @@ class GameController(object):
         if self.currentPlayer is self.players[1]:
             if self.game_mode_hard:
                 red_move = pruning_start(BoardState(self.board, self.players, self.currentPlayer),
-                                     self.players.index(self.currentPlayer))
+                                     self.players.index(self.currentPlayer), self.moves)
             else:
                 red_move = random_agent(BoardState(self.board, self.players, self.currentPlayer))
             #print("from: " + str(red_move.fromSquare.num) + " to: " + str(red_move.toSquare.num))
