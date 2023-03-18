@@ -1,4 +1,5 @@
-from src.AI.Pruning import pruning
+from src.AI.min_max_DFS import pruning_start
+from src.AI.random_agent import random_agent
 from src.Controller.AiController import Problem, best_first_search
 from src.Controller.MoveController import possibleMoves
 from src.Model.BoardModel import BoardModel
@@ -14,6 +15,7 @@ class GameController(object):
         self.players = [Player("black"), Player("red")]
         self.toSquare: Square = None
         self.fromSquare: Square = None
+        self.game_mode_hard = True
 
         # 0 = Black Player, 1 = Red Player
         self.currentPlayer = self.players[0]
@@ -21,10 +23,16 @@ class GameController(object):
         self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
 
     # Check if the move is valid and if so moves the piece
-    def nextPlayer(self):
-        self.fromSquare = None
-        self.toSquare = None
+    def nextPlayer(self, count: int):
+        if count == 0:
+            self.fromSquare = None
+            self.toSquare = None
+        if count == 2:
+            self.gameOver()
         self.currentPlayer = self.players[(self.players.index(self.currentPlayer) + 1) % 2]
+        self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
+        if not self.moves:
+            self.nextPlayer(count + 1)
 
     # Method called by view
     def click(self, square_index):
@@ -43,22 +51,9 @@ class GameController(object):
                     self.currentPlayer.points += 1
                 self.fromSquare.owner = None
                 self.toSquare.owner = self.currentPlayer
-                self.nextPlayer()
-                self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
-                if len(self.moves) == 0:
-                    self.nextPlayer()
-                    self.moves = self.moves = possibleMoves(BoardState(self.board, self.players, self.currentPlayer))
-                    if len(self.moves) == 0:
-                        self.gameOver()
-
-
-
-        # self.AIController() TODO: Does not work yet
-        if self.currentPlayer is self.players[1]:
-            print(pruning(BoardState(self.board, self.players, self.currentPlayer), 0, float('-inf'), self.currentPlayer))
+                self.nextPlayer(0)
 
         # TESTING
-        print(self.moves)
         for i in range(len(self.moves)):
             start = ""
             end = ""
@@ -70,11 +65,36 @@ class GameController(object):
                     end = str(j)
                     continue
             print(start + " to " + end)
+        print()
 
     def gameOver(self):
         None
+
+    def restart(self):
+        print("Restarting")
+
+        for Player.Square in self.board.squares:
+            Player.Square.owner = None
+            # print(Player.Square.owner)
+
+        self.players[0].points = 0
+        self.players[1].points = 0
 
     def AIController(self):
         problem = Problem(BoardState(self.board, self.players, self.currentPlayer))
         node = best_first_search(problem)
         print(node)
+
+    def AI_turn(self):
+        if self.currentPlayer is self.players[1]:
+            if self.game_mode_hard:
+                red_move = pruning_start(BoardState(self.board, self.players, self.currentPlayer),
+                                     self.players.index(self.currentPlayer), self.moves)
+            else:
+                red_move = random_agent(BoardState(self.board, self.players, self.currentPlayer))
+            #print("from: " + str(red_move.fromSquare.num) + " to: " + str(red_move.toSquare.num))
+            red_move.fromSquare.owner = None
+            red_move.toSquare.owner = self.currentPlayer
+            if self.board.squares.index(red_move.toSquare) == 13:
+                self.currentPlayer.points += 1
+            self.nextPlayer(0)

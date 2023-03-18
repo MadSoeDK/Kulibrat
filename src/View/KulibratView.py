@@ -6,10 +6,8 @@ from src.Controller.GameController import GameController
 gameController = GameController()
 window: Tk
 canvas: Canvas
-count = 0
 
 
-@staticmethod
 def launch():
     global window
     global canvas
@@ -38,27 +36,42 @@ def launch():
 
 
 def callback(e):
+    # Calculate what square was clicked in the grid.
     calc = int((e.x - 21) / 200) + 1 + int((e.y - 21) / 200) * 3
     if 0 < calc < 13 and 20 <= e.x <= 620 and 20 <= e.y <= 820:
         gameController.click(calc)
+
     # need to add calc for the spawn/goal buttons
     elif math.sqrt(((e.x - 740) ** 2) + ((e.y - 120) ** 2)) < 100:
         gameController.click(13)
     elif math.sqrt(((e.x - 740) ** 2) + ((e.y - 720) ** 2)) < 100:
         gameController.click(14)
+
+    # calc for Game-over buttons
+    if gameController.players[1].points == 5 or gameController.players[0].points == 5:
+        if math.sqrt(((e.x - 725) ** 2) + ((e.y - 550) ** 2)) < 65:
+            gameController.restart()
+        elif math.sqrt(((e.x - 905) ** 2) + ((e.y - 550) ** 2)) < 65:
+            exit()
+
+    # Clear the old canvas to prepare drawing a new screen
     global canvas
     canvas.delete('all')
+
+    # Draw the new screen
     draw_grid()
+
+    # Set the AI to play
+    while gameController.currentPlayer is gameController.players[1]:
+        gameController.AI_turn()
+        draw_grid()
 
 
 def draw_grid():
-    global count
     global canvas
     global gameController
     width = 640
     height = 840
-
-    count += 1
 
     canvas.delete('all')
     canvas.pack()
@@ -91,10 +104,11 @@ def draw_grid():
     canvas.create_oval(640, 620, 840, 820, width=draw_width)
     canvas.create_oval(640, 20, 840, 220, width=draw_width)
 
+    # Switch button text depending on currentplayer
     if gameController.currentPlayer is gameController.players[0]:
         canvas.create_text(740, 720, font='Pursia 20', text="Spawn")
         canvas.create_text(740, 120, font='Pursia 20', text="Goal")
-    else :
+    else:
         canvas.create_text(740, 720, font='Pursia 20', text="Goal")
         canvas.create_text(740, 120, font='Pursia 20', text="Spawn")
 
@@ -106,6 +120,7 @@ def draw_grid():
                 fill=gameController.board.squares[i].owner.color
             ))
 
+    # highlights the selected square
     if gameController.fromSquare is not None:
         if gameController.board.squares.index(gameController.fromSquare) < 12:
             square_index = gameController.board.squares.index(gameController.fromSquare)
@@ -123,9 +138,27 @@ def draw_grid():
                 640, 20, 840, 220, fill="yellow"
             ))
 
-    canvas.create_text(800, 300, font='Pursia 20', text="current player: " + gameController.currentPlayer.color)
-    canvas.create_text(800, 380, font='Pursia 30', text="Red point: " + str(gameController.players[1].points))
-    canvas.create_text(800, 440, font='Pursia 30', text="Black point: " + str(gameController.players[0].points))
+    # Game-over Text and buttons
+    if gameController.players[1].points == 5 or gameController.players[0].points == 5:
+
+        if gameController.players[1].points == 5:
+            canvas.create_text(815, 480, font='Pursia 25', text=gameController.players[1].color + " Player has WON")
+
+        if gameController.players[0].points == 5:
+            canvas.create_text(815, 480, font='Pursia 25', text=gameController.players[1].color + " Player has WON")
+
+        canvas.create_oval(650, 520, 800, 580, width=draw_width)
+        canvas.create_text(725, 550, font='Pursia 20', text="Restart")
+
+        canvas.create_oval(830, 520, 980, 580, width=draw_width)
+        canvas.create_text(905, 550, font='Pursia 20', text="Exit Game")
+
+        return None
+
+    # Current-player and points text
+    canvas.create_text(800, 260, font='Pursia 20', text="current player: " + gameController.currentPlayer.color)
+    canvas.create_text(800, 320, font='Pursia 30', text="Red point: " + str(gameController.players[1].points))
+    canvas.create_text(800, 370, font='Pursia 30', text="Black point: " + str(gameController.players[0].points))
 
     canvas.pack()
     canvas.update()
