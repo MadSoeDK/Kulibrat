@@ -30,7 +30,7 @@ def pruning_start(state: BoardState, current_player_index: int, moves: list) -> 
     for move in moves:
         value = pruning(result(state, move), 1, current_player_index)
         # Figures what DFS tree had the best value
-        if value > best_value:
+        if value >= best_value:
             best_action = move
             best_value = value
 
