@@ -63,18 +63,16 @@ class GameController(object):
                 if self.moves[i].toSquare is self.board.squares[j]:
                     end = str(j)
                     continue
-            print(start + " to " + end)
-        print()
+
 
     def gameOver(self):
         None
 
     def restart(self):
-        print("Restarting")
 
         for Player.Square in self.board.squares:
             Player.Square.owner = None
-            # print(Player.Square.owner)
+            
 
         self.players[0].points = 0
         self.players[1].points = 0
@@ -82,7 +80,7 @@ class GameController(object):
     def AIController(self):
         problem = Problem(BoardState(self.board, self.players, self.currentPlayer))
         node = best_first_search(problem)
-        print(node)
+
 
     def AI_turn(self):
         if self.currentPlayer is self.players[1]:
@@ -91,7 +89,6 @@ class GameController(object):
                                      self.players.index(self.currentPlayer), self.moves)
             else:
                 red_move = random_agent(BoardState(self.board, self.players, self.currentPlayer))
-            #print("from: " + str(red_move.fromSquare.num) + " to: " + str(red_move.toSquare.num))
             red_move.fromSquare.owner = None
             red_move.toSquare.owner = self.currentPlayer
             if self.board.squares.index(red_move.toSquare) == 13:
