@@ -10,7 +10,7 @@ class Node(object):
     # parent: the node in the tree that generated this node
     # action: the action that was applied to the parents state to generate this node
     # The total cost of the path from the initial state to this node
-    def __init__(self, state: BoardState, parent: Node = None, action: Action = None, path_cost: int = None):
+    def __init__(self, state: BoardState, parent: Node = None, action: Action = None, path_cost: float = None):
         self.state = state
         self.parent = parent
         self.action = action

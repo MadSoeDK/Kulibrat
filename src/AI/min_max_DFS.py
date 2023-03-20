@@ -1,7 +1,6 @@
 import copy
 import math
 
-from src.Controller.MoveController import possibleMoves
 from src.Model.BoardState import BoardState, Action
 
 
@@ -66,7 +65,7 @@ def pruning(state: BoardState, depth, current_player_index: int) -> float:
         return float('inf')
 
     # generates the list of possible moves for the current state
-    moves = possibleMoves(state)
+    moves = actions(state)
 
     # Needed for the min max method. Min is for opponents turn, max is for ours
     calc = float('-inf') if state.players.index(state.currentPlayer) == current_player_index else float('inf')
@@ -79,7 +78,7 @@ def pruning(state: BoardState, depth, current_player_index: int) -> float:
         new_state.players[1]
 
         # Stalemate happens
-        if not possibleMoves(new_state):
+        if not actions(new_state):
             # since the player that cause the stalemate lose, we check if the stalemate is good or bad
             return float('inf') if new_state.currentPlayer is new_state.players[0] else float('-inf')
 
@@ -105,11 +104,12 @@ goal_point = 6
 def eval_state(state: BoardState) -> float:
     """ Computes the Heuristic value of a given BoardState
 
-    By using pre-defined values, it computes the Heuristic value by
+    By using pre-defined values for rows, it computes the value by
     adding together the position value of red pieces, with the value for each scored point
     and substracting the same, but calculated for blacks pieces
 
     :param state: The boardState that should be evaluated
+    :return: The calculated score for the state
     """
     score = state.players[1].points * goal_point - state.players[0].points * goal_point
     for i in range(12):
@@ -132,11 +132,9 @@ def result(state: BoardState, action: Action) -> BoardState:
     It is not done here, as this list has most likely already been generated for other uses by the method calling this,
     so it is to reduce the amount of redundant method calls.
 
-    Args:
-        state: current boardstate
-        action: action that would be taken
-
-    :return BoardState: The new generated board state
+    :param state: current boardstate
+    :param action: action applied to state
+    :return: BoardState: The new generated board state
     """
     newState = copy.deepcopy(state)
 
@@ -162,3 +160,100 @@ def result(state: BoardState, action: Action) -> BoardState:
     newState.board.squares[13].owner = None
 
     return newState
+
+
+def actions(state: BoardState):
+    """ Returns the legal actions in the state
+
+    This method searches through all the squares on the board for pieces
+    and calculates the possible moves from every piece.
+
+    :param state: current boardstate
+    :return: list of possible moves
+    """
+    moves = 0
+    pieceOnBoard = 0
+    listOfMoves = list()
+
+    # Search through board for pieces
+    for i in range(12):
+        if state.board.squares[i].owner is state.currentPlayer:
+            pieceOnBoard += 1
+
+            # blacks turn
+            if state.currentPlayer is state.players[0]:
+                # attack move
+                if state.board.squares[i - 3].owner is not state.currentPlayer and state.board.squares[i - 3].owner is not None:
+                    listOfMoves.append(Action(state.board.squares[i], state.board.squares[i-3]))
+                    moves += 1
+                    # Jump move
+                    jumpTo = i
+                    while True:
+                        jumpTo -= 3
+                        if jumpTo < 0:
+                            listOfMoves.append(Action(state.board.squares[i], state.board.squares[12]))
+                            moves += 1
+                            break
+                        if state.board.squares[jumpTo].owner is state.currentPlayer:
+                            break
+                        if state.board.squares[jumpTo].owner is None:
+                            listOfMoves.append(Action(state.board.squares[i], state.board.squares[jumpTo]))
+                            moves += 1
+                            break
+
+                if 0 <= i <= 2:
+                    listOfMoves.append(Action(state.board.squares[i], state.board.squares[12]))
+                else:
+                    # Forward Right and Left move
+                    if (i % 3 == 1 or i % 3 == 0) and state.board.squares[i - 2].owner is None:
+                        listOfMoves.append(Action(state.board.squares[i], state.board.squares[i - 2]))
+                        moves += 1
+                    if (i % 3 == 1 or i % 3 == 2) and state.board.squares[i - 4].owner is None:
+                        listOfMoves.append(Action(state.board.squares[i], state.board.squares[i - 4]))
+                        moves += 1
+
+            # Reds turn
+            else:
+                # Goal Move
+                if 9 <= i <= 11:
+                    listOfMoves.append(Action(state.board.squares[i], state.board.squares[13]))
+                else:
+                    # Forward Right and Left move
+                    if (i % 3 == 1 or i % 3 == 0) and state.board.squares[i + 4].owner is None:
+                        listOfMoves.append(Action(state.board.squares[i], state.board.squares[i + 4]))
+                        moves += 1
+                    if (i % 3 == 1 or i % 3 == 2) and state.board.squares[i + 2].owner is None:
+                        listOfMoves.append(Action(state.board.squares[i], state.board.squares[i + 2]))
+                        moves += 1
+                    # attack move
+                    if state.board.squares[i + 3].owner is not state.currentPlayer and state.board.squares[i + 3].owner is not None:
+                        listOfMoves.append(Action(state.board.squares[i], state.board.squares[i + 3]))
+                        moves += 1
+                        # Skip move
+                        jumpTo = i
+                        while True:
+                            jumpTo += 3
+                            if jumpTo > 11:
+                                listOfMoves.append(Action(state.board.squares[i], state.board.squares[13]))
+                                moves += 1
+                                break
+                            if state.board.squares[jumpTo].owner is state.currentPlayer:
+                                break
+                            if state.board.squares[jumpTo].owner is None:
+                                listOfMoves.append(Action(state.board.squares[i], state.board.squares[jumpTo]))
+                                moves += 1
+                                break
+
+    # spawn option
+    if pieceOnBoard < 4:
+        if state.currentPlayer is state.players[0]:
+            for i in range(3):
+                if state.board.squares[i + 9].owner is None:
+                    listOfMoves.append(Action(state.board.squares[13], state.board.squares[i + 9]))
+                    moves += 1
+        else:
+            for i in range(3):
+                if state.board.squares[i].owner is None:
+                    listOfMoves.append(Action(state.board.squares[12], state.board.squares[i]))
+                    moves += 1
+    return listOfMoves

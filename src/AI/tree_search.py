@@ -1,12 +1,10 @@
 import copy
 from queue import PriorityQueue
 
-from src.Model.BoardModel import BoardModel
+from src.AI.min_max_DFS import eval_state, actions
 from src.Model.BoardState import Action, Node, BoardState
-from src.Controller.MoveController import possibleMoves
-from src.Model.Player import Player
 
-
+# Code in this file is unused and not finished implementation and is not used in the AI
 class Problem(object):
     def __init__(self, init_state: BoardState):
         self.init_state = init_state
@@ -20,7 +18,7 @@ class Problem(object):
         return False
 
     def actions(self, state: BoardState) -> list:
-        return possibleMoves(state)
+        return actions(state)
 
     def result(self, state: BoardState, action: Action) -> BoardState:
         newState = copy.deepcopy(state)
@@ -42,15 +40,15 @@ class Problem(object):
 
         return newState
 
-    def action_cost(self, state: BoardState, action: Action, newState: BoardState) -> int:
-        return 1
+    def action_cost(self, state: BoardState) -> float:
+        return eval_state(state)
 
 
 def expand(problem: Problem, node: Node):
     state = node.state
     for action in problem.actions(state):
         new_state = problem.result(state, action)
-        cost = node.path_cost + problem.action_cost(state, action, new_state)
+        cost = node.path_cost + problem.action_cost(state)
         yield Node(state=new_state, parent=node, action=action, path_cost=cost)
 
 
