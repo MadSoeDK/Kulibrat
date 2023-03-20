@@ -6,10 +6,13 @@ from src.Controller.GameController import GameController
 gameController = GameController()
 window: Tk
 canvas: Canvas
+difficult_button: Button
+
 
 def launch():
     global window
     global canvas
+    global difficult_button
 
     width = 1000
     height = 840
@@ -28,10 +31,8 @@ def launch():
     else:
         color = "red"
 
-    print(color)
-
     difficult_button = Button(
-        window,
+        canvas,
         text="Hard mode",
         background=color,
         activebackground=color,
@@ -51,10 +52,22 @@ def launch():
 
 
 def toggle_difficulty():
+    global difficult_button
     gameController.game_mode_hard = not gameController.game_mode_hard
-    canvas.pack()
-    canvas.update()
-    print(gameController.game_mode_hard)
+    if gameController.game_mode_hard:
+        color = "green"
+    else:
+        color = "red"
+
+    difficult_button = Button(
+        canvas,
+        text="Hard mode",
+        background=color,
+        activebackground=color,
+        command=toggle_difficulty,
+    )
+    difficult_button.place(x=900, y=80)
+
 
 def callback(e):
     # Calculate what square was clicked in the grid.
@@ -160,21 +173,16 @@ def draw_grid():
             ))
 
     # Game-over Text and buttons
-    if gameController.players[1].points == 5 or gameController.players[0].points == 5:
+    for player in gameController.players:
+        if player.points == 5:
+            canvas.create_text(815, 480, font='Pursia 25', text=player.color + " Player has WON")
 
-        if gameController.players[1].points == 5:
-            canvas.create_text(815, 480, font='Pursia 25', text=gameController.players[1].color + " Player has WON")
+            canvas.create_oval(650, 520, 800, 580, width=draw_width)
+            canvas.create_text(725, 550, font='Pursia 20', text="Restart")
 
-        if gameController.players[0].points == 5:
-            canvas.create_text(815, 480, font='Pursia 25', text=gameController.players[1].color + " Player has WON")
-
-        canvas.create_oval(650, 520, 800, 580, width=draw_width)
-        canvas.create_text(725, 550, font='Pursia 20', text="Restart")
-
-        canvas.create_oval(830, 520, 980, 580, width=draw_width)
-        canvas.create_text(905, 550, font='Pursia 20', text="Exit Game")
-
-        return None
+            canvas.create_oval(830, 520, 980, 580, width=draw_width)
+            canvas.create_text(905, 550, font='Pursia 20', text="Exit Game")
+            return
 
     # Current-player and points text
     canvas.create_text(800, 260, font='Pursia 20', text="current player: " + gameController.currentPlayer.color)
