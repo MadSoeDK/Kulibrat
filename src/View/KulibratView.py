@@ -7,7 +7,6 @@ gameController = GameController()
 window: Tk
 canvas: Canvas
 
-
 def launch():
     global window
     global canvas
@@ -24,6 +23,22 @@ def launch():
 
     draw_grid()
 
+    if gameController.game_mode_hard:
+        color = "green"
+    else:
+        color = "red"
+
+    print(color)
+
+    difficult_button = Button(
+        window,
+        text="Hard mode",
+        background=color,
+        activebackground=color,
+        command=toggle_difficulty,
+    )
+    difficult_button.place(x=900, y=80)
+
     window.bind('<Button-1>', callback)
 
     exit_button1 = Button(window,
@@ -34,6 +49,12 @@ def launch():
 
     window.mainloop()
 
+
+def toggle_difficulty():
+    gameController.game_mode_hard = not gameController.game_mode_hard
+    canvas.pack()
+    canvas.update()
+    print(gameController.game_mode_hard)
 
 def callback(e):
     # Calculate what square was clicked in the grid.
