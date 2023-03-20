@@ -28,6 +28,7 @@ class GameController(object):
             self.toSquare = None
         if count == 2:
             self.gameOver()
+            return
         self.currentPlayer = self.players[(self.players.index(self.currentPlayer) + 1) % 2]
         self.moves = actions(BoardState(self.board, self.players, self.currentPlayer))
         if not self.moves:
@@ -76,4 +77,6 @@ class GameController(object):
             red_move.toSquare.owner = self.currentPlayer
             if self.board.squares.index(red_move.toSquare) == 13:
                 self.currentPlayer.points += 1
+            if self.currentPlayer.points == 5:
+                self.gameOver()
             self.nextPlayer(0)
