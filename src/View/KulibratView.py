@@ -173,16 +173,17 @@ def draw_grid():
             ))
 
     # Game-over Text and buttons
-    for player in gameController.players:
-        if player.points == 5:
-            canvas.create_text(815, 480, font='Pursia 25', text=player.color + " Player has WON")
+    if not gameController.game_active:
+        for player in gameController.players:
+            if player.points == 5:
+                canvas.create_text(815, 480, font='Pursia 25', text=player.color + " Player has WON")
 
-            canvas.create_oval(650, 520, 800, 580, width=draw_width)
-            canvas.create_text(725, 550, font='Pursia 20', text="Restart")
+                canvas.create_oval(650, 520, 800, 580, width=draw_width)
+                canvas.create_text(725, 550, font='Pursia 20', text="Restart")
 
-            canvas.create_oval(830, 520, 980, 580, width=draw_width)
-            canvas.create_text(905, 550, font='Pursia 20', text="Exit Game")
-            return
+                canvas.create_oval(830, 520, 980, 580, width=draw_width)
+                canvas.create_text(905, 550, font='Pursia 20', text="Exit Game")
+                return
 
     # Current-player and points text
     canvas.create_text(800, 260, font='Pursia 20', text="current player: " + gameController.currentPlayer.color)

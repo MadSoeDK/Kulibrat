@@ -15,6 +15,7 @@ class GameController(object):
         self.toSquare: Square = None
         self.fromSquare: Square = None
         self.game_mode_hard = True
+        self.game_active = True
 
         # 0 = Black Player, 1 = Red Player
         self.currentPlayer = self.players[0]
@@ -48,45 +49,28 @@ class GameController(object):
             if move.fromSquare is self.fromSquare and move.toSquare is self.toSquare:
                 if self.board.squares.index(self.toSquare) > 11:
                     self.currentPlayer.points += 1
+                    if self.currentPlayer.points == 5:
+                        self.gameOver()
                 self.fromSquare.owner = None
                 self.toSquare.owner = self.currentPlayer
                 self.nextPlayer(0)
 
-        # TESTING
-        for i in range(len(self.moves)):
-            start = ""
-            end = ""
-            for j in range(14):
-                if self.moves[i].fromSquare is self.board.squares[j]:
-                    start = str(j)
-                    continue
-                if self.moves[i].toSquare is self.board.squares[j]:
-                    end = str(j)
-                    continue
-
-
     def gameOver(self):
-        None
+        self.game_active = False
 
     def restart(self):
 
         for Player.Square in self.board.squares:
             Player.Square.owner = None
-            
 
         self.players[0].points = 0
         self.players[1].points = 0
-
-    def AIController(self):
-        problem = Problem(BoardState(self.board, self.players, self.currentPlayer))
-        node = best_first_search(problem)
-
 
     def AI_turn(self):
         if self.currentPlayer is self.players[1]:
             if self.game_mode_hard:
                 red_move = pruning_start(BoardState(self.board, self.players, self.currentPlayer),
-                                     self.players.index(self.currentPlayer), self.moves)
+                                         self.players.index(self.currentPlayer), self.moves)
             else:
                 red_move = random_agent(BoardState(self.board, self.players, self.currentPlayer))
             red_move.fromSquare.owner = None
