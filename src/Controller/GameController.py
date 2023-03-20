@@ -1,6 +1,5 @@
 from src.AI.min_max_DFS import pruning_start, actions
 from src.AI.random_agent import random_agent
-from src.AI.tree_search import Problem, best_first_search
 from src.Model.BoardModel import BoardModel
 from src.Model.BoardState import BoardState
 from src.Model.Player import Player
