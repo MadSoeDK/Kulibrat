@@ -4,7 +4,7 @@ from queue import PriorityQueue
 from src.AI.min_max_DFS import eval_state, actions
 from src.Model.BoardState import Action, Node, BoardState
 
-
+# Code in this file is unused and not finished implementation and is not used in the AI
 class Problem(object):
     def __init__(self, init_state: BoardState):
         self.init_state = init_state
